@@ -39,8 +39,15 @@ export function createLightThemeSection(
   const group = section.querySelector<HTMLElement>(RADIOGROUP);
   const title = header?.querySelector<HTMLElement>(TEXT);
   const icon = header?.querySelector<SVGElement>("svg");
-  const thumb = group?.firstElementChild as HTMLElement | null | undefined;
-  if (!group || !title || !icon || !thumb) return null;
+  if (!group || !title || !icon) return null;
+
+  // 썸은 radio를 품지 않은 자식이다. react-native-web이 레이아웃을 측정한 뒤에야 렌더링되므로
+  // (새로고침 직후에는 없다) 첫 번째 자식이라고 가정하지 않고, 없으면 만들지 않는다.
+  const children = [...group.children] as HTMLElement[];
+  const thumb = children.find((el) => !el.querySelector(RADIO));
+  const optionWrappers = children.filter((el) => el.querySelector(RADIO));
+  if (!thumb) return null;
+  const thumbEl: HTMLElement = thumb; // 중첩 함수에서도 non-undefined 타입이 유지되도록 따로 둔다
 
   // 선택(진한) 색은 제목 글자색과 같고, 비선택 색은 그와 다른 글자색이다.
   const activeColor = title.style.color;
@@ -49,8 +56,7 @@ export function createLightThemeSection(
       .map((el) => el.style.color)
       .find((color) => color !== activeColor) ?? activeColor;
 
-  // 옵션 래퍼는 thumb 뒤에 오는 자식들이다. 필요한 개수만 남긴다.
-  const optionWrappers = [...group.children].slice(1) as HTMLElement[];
+  // 필요한 개수의 옵션만 남긴다.
   if (optionWrappers.length < LIGHT_THEMES.length) return null;
   optionWrappers.slice(LIGHT_THEMES.length).forEach((el) => el.remove());
 
@@ -72,11 +78,11 @@ export function createLightThemeSection(
   icon.innerHTML = SUN_ICON;
 
   // 원본의 px 단위 썸 크기는 복제본에서 맞지 않으므로 비율로 다시 계산한다.
-  thumb.style.width = `calc((100% - ${THUMB_PADDING * 2}px) / ${items.length})`;
+  thumbEl.style.width = `calc((100% - ${THUMB_PADDING * 2}px) / ${items.length})`;
 
   function update(selected: LightThemeId) {
     const index = Math.max(0, items.findIndex((item) => item.id === selected));
-    thumb!.style.transform = `translateX(calc(${THUMB_PADDING}px + ${index * 100}%))`;
+    thumbEl.style.transform = `translateX(calc(${THUMB_PADDING}px + ${index * 100}%))`;
     items.forEach((item, i) => {
       item.radio.setAttribute("aria-checked", String(i === index));
       item.text.style.color = i === index ? activeColor : inactiveColor;
