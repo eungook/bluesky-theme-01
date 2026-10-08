@@ -13,6 +13,6 @@
 html.theme--light:not([data-bt-light-theme="light"]),
 html.theme--light:not([data-bt-light-theme="light"]) body,
 html.theme--light:not([data-bt-light-theme="light"]) #root {
-  background-color: #f5f3ee;
-  --background: #f5f3ee;
+  background-color: #ebe8e0;
+  --background: #ebe8e0;
 }
