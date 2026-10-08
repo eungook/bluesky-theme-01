@@ -1,0 +1,18 @@
+/*
+ * 밝은 테마(html.theme--light)의 "편안" 스타일.
+ *
+ * 블루스카이는 아래 값을 html.theme--light 규칙으로 지정한다. (specificity 0,1,1 / 0,1,2)
+ *   background-color: white; --text: black; --background: white; --backgroundLight: #DCE2EA;
+ * 여기서는 :not() 때문에 specificity가 더 높아 !important 없이 덮어쓴다.
+ *
+ * "편안"이 기본값이므로 data-bt-light-theme이 "light"가 아닐 때(아직 설정을 읽기 전 포함)
+ * 적용한다. 저장된 값을 읽기 전에도 흰색 화면이 번쩍이지 않게 하기 위해서다.
+ *
+ * --text(black)는 그대로 둔다. --rc-* 등 나머지 변수는 아직 건드리지 않는다.
+ */
+html.theme--light:not([data-bt-light-theme="light"]),
+html.theme--light:not([data-bt-light-theme="light"]) body,
+html.theme--light:not([data-bt-light-theme="light"]) #root {
+  background-color: #f5f3ee;
+  --background: #f5f3ee;
+}

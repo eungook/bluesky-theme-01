@@ -8,9 +8,9 @@ async function build() {
   await rm(OUT, { recursive: true, force: true });
 
   // 콘텐츠 스크립트는 ES 모듈로 로드되지 않으므로 iife로 낸다.
-  // root를 src로 두어 dist/content/index.js 경로가 manifest와 일치한다.
+  // root를 src로 두어 dist/content/index.js, theme.css 경로가 manifest와 일치한다.
   const result = await Bun.build({
-    entrypoints: [`${SRC}/content/index.ts`],
+    entrypoints: [`${SRC}/content/index.ts`, `${SRC}/content/theme.css`],
     outdir: OUT,
     root: SRC,
     target: "browser",

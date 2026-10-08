@@ -1,13 +1,14 @@
 import { INJECTED_ATTR, RADIO, RADIOGROUP, TEXT } from "./selectors";
 
+// 왼쪽부터 표시된다. id는 <html data-bt-light-theme> 값이며 theme.css의 선택자와 맞춰야 한다.
 export const LIGHT_THEMES = [
-  { id: "theme1", label: "테마1" },
-  { id: "theme2", label: "테마2" },
+  { id: "comfort", label: "편안" }, // 흰색 배경을 톤다운
+  { id: "light", label: "밝음" }, // 블루스카이 기본 밝음 테마 그대로
 ] as const;
 
 export type LightThemeId = (typeof LIGHT_THEMES)[number]["id"];
 
-export const DEFAULT_LIGHT_THEME: LightThemeId = "theme1";
+export const DEFAULT_LIGHT_THEME: LightThemeId = "comfort";
 
 const SECTION_TITLE = "밝은 테마";
 const THUMB_PADDING = 4;

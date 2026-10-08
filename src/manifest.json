@@ -9,6 +9,7 @@
     {
       "matches": ["https://bsky.app/*"],
       "js": ["content/index.js"],
+      "css": ["content/theme.css"],
       "run_at": "document_start"
     }
   ]
