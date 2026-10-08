@@ -87,7 +87,7 @@ export function createLightThemeSection(
   );
 
   const group = view(
-    `width:100%;flex:1 1 0%;flex-direction:row;background-color:${COLOR.track};border-radius:14px;padding:${THUMB_PADDING}px;`,
+    `width:100%;flex:1 1 0%;flex-direction:row;background-color: ${COLOR.track};border-radius:14px;padding:${THUMB_PADDING}px;`,
     { role: "radiogroup", "aria-label": SECTION_TITLE },
   );
   group.append(thumb);

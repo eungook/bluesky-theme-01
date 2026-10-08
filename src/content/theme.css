@@ -13,18 +13,43 @@
  * --text(black)는 그대로 둔다. --rc-* 등 나머지 변수는 아직 건드리지 않는다.
  */
 html.theme--light:not([data-bt-light-theme="light"]) {
-  --bt-comfort-bg: #f5f4f0;
+  /*
+   * 편안 색조: 흰색(255)이 이 색이 된다. 색을 바꿀 때는 이 세 숫자만 고친다.
+   * 흰색 계열의 다른 색은 각 채널에 (색조 / 255)를 곱해서 만든다. 이렇게 하면 기본 배경과
+   * hover/보조 배경의 밝기 순서(기본 > hover > 보조)가 유지된다.
+   */
+  --bt-tint-r: 237;
+  --bt-tint-g: 237;
+  --bt-tint-b: 237;
+
+  /*
+   * 사용 중인 흰색 계열 배경 (인라인 style에서 수집한 값. 팔레트의 contrast_0/25/50으로 추정):
+   *  255,255,255 = 기본 배경 / 249,250,251 = hover / 239,242,246 = 보조 면(설정 트랙, 스켈레톤 등)
+   */
+  --bt-bg-0: rgb(var(--bt-tint-r) var(--bt-tint-g) var(--bt-tint-b));
+  --bt-bg-25: rgb(
+    calc(249 * var(--bt-tint-r) / 255) calc(250 * var(--bt-tint-g) / 255) calc(251 * var(--bt-tint-b) / 255)
+  );
+  --bt-bg-50: rgb(
+    calc(239 * var(--bt-tint-r) / 255) calc(242 * var(--bt-tint-g) / 255) calc(246 * var(--bt-tint-b) / 255)
+  );
 }
 
 /* 1) 스타일시트 규칙 */
 html.theme--light:not([data-bt-light-theme="light"]),
 html.theme--light:not([data-bt-light-theme="light"]) body,
 html.theme--light:not([data-bt-light-theme="light"]) #root {
-  background-color: var(--bt-comfort-bg);
-  --background: var(--bt-comfort-bg);
+  background-color: var(--bt-bg-0);
+  --background: var(--bt-bg-0);
 }
 
-/* 2) 인라인 style로 흰 배경이 지정된 요소 */
+/* 2) 인라인 style로 배경이 지정된 요소. hover 때 인라인 값이 바뀌어도 선택자가 그대로 걸린다. */
 html.theme--light:not([data-bt-light-theme="light"]) [style*="background-color: rgb(255, 255, 255)"] {
-  background-color: var(--bt-comfort-bg) !important;
+  background-color: var(--bt-bg-0) !important;
+}
+html.theme--light:not([data-bt-light-theme="light"]) [style*="background-color: rgb(249, 250, 251)"] {
+  background-color: var(--bt-bg-25) !important;
+}
+html.theme--light:not([data-bt-light-theme="light"]) [style*="background-color: rgb(239, 242, 246)"] {
+  background-color: var(--bt-bg-50) !important;
 }
