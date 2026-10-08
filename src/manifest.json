@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Bluesky Theme",
+  "version": "0.0.1",
+  "description": "블루스카이 웹의 테마 기능을 강화합니다.",
+  "permissions": ["storage"],
+  "host_permissions": ["https://bsky.app/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://bsky.app/*"],
+      "js": ["content/index.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
