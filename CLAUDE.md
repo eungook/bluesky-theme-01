@@ -6,7 +6,7 @@ alwaysApply: false
 
 This project is a Chrome extension (Manifest V3) for Bluesky web themes. Before writing extension code, read [docs/extension-guidelines.md](docs/extension-guidelines.md) (build pitfalls, theme design notes) and keep it updated when decisions change.
 
-Follow [docs/development-conventions.md](docs/development-conventions.md): use Bun, and commit on your own in reasonably sized units, with Korean Conventional Commit messages.
+Follow [docs/development-conventions.md](docs/development-conventions.md): use Bun, edit files with the Edit/Write tools (not python/sed in Bash), and commit on your own in reasonably sized units, with Korean Conventional Commit messages.
 
 Default to using Bun instead of Node.js.
 
