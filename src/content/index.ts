@@ -11,7 +11,7 @@ const STORAGE_KEY = "lightTheme";
 const ROOT_ATTR = "data-bt-light-theme";
 
 let selected: LightThemeId = DEFAULT_LIGHT_THEME;
-let current: (LightThemeSection & { signature: string }) | null = null;
+let current: LightThemeSection | null = null;
 
 const isLightThemeId = (v: unknown): v is LightThemeId => LIGHT_THEMES.some((t) => t.id === v);
 
@@ -46,11 +46,9 @@ function sync() {
     return;
   }
 
-  // 복제본의 색은 복제 시점에 고정되므로, 원본 색이 바뀌었거나 React가 원본을 다시 그렸으면 새로 만든다.
-  const signature = group.style.backgroundColor;
+  // 이미 원본 바로 뒤에 보이는 상태로 있으면 그대로 둔다. React가 원본을 다시 그렸으면 새로 만든다.
   if (
     current &&
-    current.signature === signature &&
     current.element.previousElementSibling === source &&
     current.element.isConnected &&
     isVisible(current.element)
@@ -59,14 +57,13 @@ function sync() {
   }
   removeInjected();
 
-  const section = createLightThemeSection(source, selected, (id) => {
+  const section = createLightThemeSection(selected, (id) => {
     applySelection(id);
-    section?.update(id);
+    section.update(id);
     void chrome.storage.sync.set({ [STORAGE_KEY]: id });
   });
-  if (!section) return;
   source.after(section.element);
-  current = { ...section, signature };
+  current = section;
 }
 
 let scheduled = false;

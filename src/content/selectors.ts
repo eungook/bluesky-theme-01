@@ -8,7 +8,6 @@ export const LIGHT_THEME_CLASS = "theme--light";
 
 export const RADIOGROUP = '[role="radiogroup"]';
 export const RADIO = '[role="radio"]';
-export const TEXT = '[dir="auto"]';
 
 // 우리가 삽입한 요소 표시용
 export const INJECTED_ATTR = "data-bt-light-theme-section";
