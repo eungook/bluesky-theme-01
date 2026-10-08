@@ -20,8 +20,11 @@ function applySelection(id: LightThemeId) {
   document.documentElement.setAttribute(ROOT_ATTR, id);
 }
 
+// 블루스카이는 이전에 방문한 화면을 숨긴 채 DOM에 남겨 둘 수 있다. 화면에 보이는 요소만 대상으로 한다.
+const isVisible = (el: HTMLElement) => el.checkVisibility?.() ?? el.getClientRects().length > 0;
+
 function removeInjected() {
-  document.querySelector(`[${INJECTED_ATTR}]`)?.remove();
+  document.querySelectorAll(`[${INJECTED_ATTR}]`).forEach((el) => el.remove());
   current = null;
 }
 
@@ -33,9 +36,9 @@ function sync() {
     return;
   }
 
-  // 가장 먼저 나오는 radiogroup이 "색상 모드"이다. (aria-label은 번역되므로 쓰지 않는다)
+  // 보이는 화면에서 가장 먼저 나오는 radiogroup이 "색상 모드"이다. (aria-label은 번역되므로 쓰지 않는다)
   const group = [...document.querySelectorAll<HTMLElement>(RADIOGROUP)].find(
-    (el) => !el.closest(`[${INJECTED_ATTR}]`),
+    (el) => !el.closest(`[${INJECTED_ATTR}]`) && isVisible(el),
   );
   const source = group?.parentElement?.parentElement;
   if (!group || !source) {
@@ -49,7 +52,8 @@ function sync() {
     current &&
     current.signature === signature &&
     current.element.previousElementSibling === source &&
-    current.element.isConnected
+    current.element.isConnected &&
+    isVisible(current.element)
   ) {
     return;
   }
