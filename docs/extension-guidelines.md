@@ -47,6 +47,7 @@ dist/                   # 빌드 산출물 (git 제외)
 직접 확인한 내용만 적는다. (로그인이 필요한 화면은 사용자가 DevTools에서 outerHTML을 복사해 준 것을 바탕으로 한다. 에이전트가 로그인 화면에 직접 접근하지 않는다.)
 
 - **현재 테마:** `<html class="theme--light">`, `<html class="theme--dim">` 등으로 표시된다. 시스템 모드일 때도 OS 설정에 따라 이 클래스가 자동으로 바뀐다. 따라서 `theme--light` 여부만 보면 "시스템 모드" 분기를 따로 만들 필요가 없다.
+- **밝은 테마 스타일:** 사용자가 DevTools에서 확인한 값으로, 블루스카이는 `html.theme--light, html.theme--light body, html.theme--light #root { background-color: white; --text: black; --background: white; --backgroundLight: #DCE2EA; }`로 지정한다. 확장의 [theme.css](../src/content/theme.css)는 같은 요소를 더 높은 specificity(`:not([data-bt-light-theme="light"])`)로 덮어써서 `!important` 없이 이긴다. `:root`에는 `--rc-*` 변수(`--rc-focus-color: #08f` 등)도 있으나 아직 건드리지 않았다.
 - **이전 화면이 숨겨진 채 남을 수 있다:** 화면을 이동했다가 돌아오면 같은 화면이 DOM에 여러 개 있을 수 있어서, `document.querySelector`로 첫 번째 요소를 고르면 숨겨진 옛 화면을 잡을 수 있다. 요소를 고를 때는 `checkVisibility()`로 보이는 것만 대상으로 한다. (보이는 요소만 고르도록 고친 뒤 "설정 > 모양 → 프로필 → 설정 > 모양" 재진입 시 섹션이 사라지던 증상이 해결되어 확인했다.)
 - **SPA:** 라우트 이동 시 페이지가 새로 로드되지 않는다. `MutationObserver`로 화면이 그려지는 시점을 감지한다.
 - **설정 > 모양 (`/settings/appearance`):**
