@@ -4,7 +4,7 @@
 
 ## 기능
 
-- 설정 > 모양(`/settings/appearance`)에 "색상 테마" 선택을 추가한다. 테마는 밝음과 어두움을 묶은 하나의 선택이고, 각 선택지에는 밝음/어두움의 대표색을 보여 주는 작은 원이 붙는다. 선택값은 `chrome.storage.sync`에 저장되고 `<html data-bt-theme="mono|soft|yellow|forest|lavender|sunset">`로 반영된다. ([themes.ts](src/content/themes.ts), [theme.css](src/content/theme.css))
+- 설정 > 모양(`/settings/appearance`)에 "색상 테마" 선택을 추가한다. 테마는 밝음과 어두움을 묶은 하나의 선택이고, 각 선택지에는 지금 바탕(밝음 또는 어두움)에서 그 테마의 기본 배경색을 보여 주는 작은 원이 붙는다. 선택값은 `chrome.storage.sync`에 저장되고 `<html data-bt-theme="mono|soft|yellow|forest|lavender|sunset">`로 반영된다. ([themes.ts](src/content/themes.ts), [theme.css](src/content/theme.css))
   - **흑백** (기본): 블루스카이 그대로. 선택이 없을 때(최초 설치 등)는 이 값이다.
   - **소프트**: 편안(흰색 배경을 톤다운) + 어둑함.
   - **노랑**: 아주 옅은 겨자색 / 아주 어두운 노란색.
