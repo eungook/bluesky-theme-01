@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Bluesky Theme",
+  "name": "Color Themes for Bluesky",
   "version": "1.0.0",
-  "description": "블루스카이 웹의 테마 기능을 강화합니다.",
+  "description": "Adds multiple color themes to Bluesky on the web.",
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
