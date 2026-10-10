@@ -17,6 +17,8 @@ export const MESSAGES = {
     sunset: "Sunset",
   },
   ko: { title: "색상 테마", mono: "흑백", soft: "소프트", yellow: "노랑", forest: "숲", lavender: "라벤더", sunset: "노을" },
+  // 블루스카이 일본어 화면의 "カラーモード"(색상 모드)에 맞춰 제목을 "カラーテーマ"로 했다.
+  ja: { title: "カラーテーマ", mono: "白黒", soft: "ソフト", yellow: "イエロー", forest: "森", lavender: "ラベンダー", sunset: "夕焼け" },
 } satisfies Record<string, Messages>;
 
 export type Locale = keyof typeof MESSAGES;
