@@ -21,8 +21,8 @@
  *  -0   기본 배경       (밝음 255,255,255 / 어둑함 21,29,40 / 어두움 0,0,0)
  *  -25  hover           (밝음 249,250,251 / 어둑함 28,39,54 / 어두움 17,24,34)
  *  -50  보조 면         (밝음 239,242,246 / 어둑함 34,46,63 / 어두움 25,34,46)  설정 트랙, 스켈레톤 등
- *  -100 어두운 쪽만     (어둑함 44,58,78 / 어두움 35,46,62)
- * 밝은 쪽은 기본 > hover > 보조 면, 어두운 쪽은 기본 < hover < 보조 면 < -100 순서가 유지되게 정한다.
+ *  -100 구분선 계열     (밝음 220,226,234 / 어둑함 44,58,78 / 어두움 35,46,62)
+ * 밝은 쪽은 -0 > -25 > -50 > -100, 어두운 쪽은 -0 < -25 < -50 < -100 순서가 유지되게 정한다.
  * (hover 단계는 밝기 순서로 추정한 대응이다. docs/extension-guidelines.md 참고)
  */
 html {
@@ -30,6 +30,7 @@ html {
   --bt-mono-light-0: #ffffff;
   --bt-mono-light-25: #f9fafb;
   --bt-mono-light-50: #eff2f6;
+  --bt-mono-light-100: #dce2ea;
   --bt-mono-dark-0: #000000;
   --bt-mono-dark-25: #111822;
   --bt-mono-dark-50: #19222e;
@@ -39,6 +40,7 @@ html {
   --bt-soft-light-0: #ededed;
   --bt-soft-light-25: #e7e8e9;
   --bt-soft-light-50: #dee1e5;
+  --bt-soft-light-100: #cdd2d9;
   --bt-soft-dark-0: #151d28;
   --bt-soft-dark-25: #1c2736;
   --bt-soft-dark-50: #222e3f;
@@ -48,6 +50,7 @@ html {
   --bt-yellow-light-0: #f6efcf;
   --bt-yellow-light-25: #efe8c5;
   --bt-yellow-light-50: #e7dfb8;
+  --bt-yellow-light-100: #d5d0af;
   --bt-yellow-dark-0: #1c1805;
   --bt-yellow-dark-25: #262109;
   --bt-yellow-dark-50: #302a0d;
@@ -57,6 +60,7 @@ html {
   --bt-forest-light-0: #e8efe6;
   --bt-forest-light-25: #e1e9df;
   --bt-forest-light-50: #d6e0d3;
+  --bt-forest-light-100: #c5d1c9;
   --bt-forest-dark-0: #0f1a14;
   --bt-forest-dark-25: #17251c;
   --bt-forest-dark-50: #1f3025;
@@ -68,21 +72,25 @@ html.theme--light[data-bt-theme="mono"] {
   --bt-bg-0: var(--bt-mono-light-0);
   --bt-bg-25: var(--bt-mono-light-25);
   --bt-bg-50: var(--bt-mono-light-50);
+  --bt-bg-100: var(--bt-mono-light-100);
 }
 html.theme--light[data-bt-theme="soft"] {
   --bt-bg-0: var(--bt-soft-light-0);
   --bt-bg-25: var(--bt-soft-light-25);
   --bt-bg-50: var(--bt-soft-light-50);
+  --bt-bg-100: var(--bt-soft-light-100);
 }
 html.theme--light[data-bt-theme="yellow"] {
   --bt-bg-0: var(--bt-yellow-light-0);
   --bt-bg-25: var(--bt-yellow-light-25);
   --bt-bg-50: var(--bt-yellow-light-50);
+  --bt-bg-100: var(--bt-yellow-light-100);
 }
 html.theme--light[data-bt-theme="forest"] {
   --bt-bg-0: var(--bt-forest-light-0);
   --bt-bg-25: var(--bt-forest-light-25);
   --bt-bg-50: var(--bt-forest-light-50);
+  --bt-bg-100: var(--bt-forest-light-100);
 }
 
 html:is(.theme--dim, .theme--dark)[data-bt-theme="mono"] {
@@ -146,6 +154,9 @@ html.theme--light[data-bt-theme] [style*="background-color: rgb(249, 250, 251)"]
 }
 html.theme--light[data-bt-theme] [style*="background-color: rgb(239, 242, 246)"] {
   background-color: var(--bt-bg-50, rgb(239, 242, 246)) !important;
+}
+html.theme--light[data-bt-theme] [style*="background-color: rgb(220, 226, 234)"] {
+  background-color: var(--bt-bg-100, rgb(220, 226, 234)) !important;
 }
 
 /* 어둑함 */
