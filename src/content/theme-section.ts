@@ -89,7 +89,7 @@ function text(content: string, style: string): HTMLDivElement {
 function swatch(id: ThemeId, base: ThemeBase, ring: string): HTMLDivElement {
   const side = base === "light" ? "light" : "dark";
   return view(
-    "width:16px;height:16px;border-radius:8px;flex-shrink:0;" +
+    "width:32px;height:32px;border-radius:16px;flex-shrink:0;" +
       `box-shadow:inset 0 0 0 1px ${ring};background-color:var(--bt-${id}-${side}-0);`,
     { "aria-hidden": "true" },
   );
