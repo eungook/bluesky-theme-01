@@ -24,6 +24,10 @@ async function build() {
 
   // bun build가 처리하지 않는 정적 파일은 직접 복사한다.
   await Bun.write(`${OUT}/manifest.json`, Bun.file(`${SRC}/manifest.json`));
+  // manifest의 icons가 가리키는 PNG만 복사한다. 원본 SVG는 스토어/확장에 필요 없어 싣지 않는다.
+  for await (const file of new Bun.Glob("icons/*.png").scan(SRC)) {
+    await Bun.write(`${OUT}/${file}`, Bun.file(`${SRC}/${file}`));
+  }
   console.log(`[build] ${new Date().toLocaleTimeString()} done`);
   return true;
 }

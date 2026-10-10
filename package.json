@@ -12,6 +12,7 @@
   "scripts": {
     "build": "bun run build.ts",
     "dev": "bun run build.ts --watch",
+    "icons": "bun run scripts/build-icons.ts",
     "typecheck": "tsc"
   }
 }

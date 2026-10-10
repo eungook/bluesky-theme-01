@@ -22,10 +22,12 @@ bun install
 bun run build       # dist/ 생성
 bun run dev         # 변경 시 자동 재빌드
 bun run typecheck
+bun run icons       # src/icons/icon.svg에서 아이콘 PNG를 다시 만든다 (macOS + Chrome 필요)
 ```
 
 `dist/`를 `chrome://extensions`의 "압축해제된 확장 프로그램을 로드합니다"로 불러온다.
 
+확장 아이콘은 [src/icons/](src/icons/)에 있다. 원본은 `icon.svg`이고 16/32/48/128px PNG는 `bun run icons`로 만든다. 모양을 바꿀 때만 다시 만들고 PNG를 같이 커밋한다.
 더 자세한 내용은 [docs/](docs/)를 참고한다.
 
 - [extension-guidelines.md](docs/extension-guidelines.md): 빌드 주의사항, 블루스카이 DOM 메모
