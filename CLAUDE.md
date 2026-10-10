@@ -8,7 +8,7 @@ This project is a Chrome extension (Manifest V3) for Bluesky web themes. Before 
 
 Follow [docs/development-conventions.md](docs/development-conventions.md): use Bun, edit files with the Edit/Write tools (not python/sed in Bash), and commit on your own in reasonably sized units, with Korean Conventional Commit messages.
 
-Track unresolved questions in [docs/open-questions.md](docs/open-questions.md): read it before starting a task, ask blocking questions up front, log non-blocking ones there with your default, and end your final message with at most 3 "결정 대기" items answerable in one word.
+Track decisions that need the user in [docs/pending-decisions.md](docs/pending-decisions.md): read it before starting a task, ask blocking questions up front, log non-blocking ones there with your default, and end your final message with at most 3 "결정 대기" items from it, answerable in one word. Things the user consciously deferred (including user to-dos) go in [docs/later.md](docs/later.md); don't raise them as pending unless their trigger condition is met.
 
 Default to using Bun instead of Node.js.
 
