@@ -1,5 +1,6 @@
 /*
- * 밝은 테마(html.theme--light)의 "편안" 스타일.
+ * 통합 테마. <html data-bt-theme="mono|soft|yellow|forest">로 선택된다. (ids는 themes.ts와 맞춘다)
+ * 지금은 밝은 테마(html.theme--light)만 적용한다. 어두운 쪽(--bt-<id>-dark-*)은 swatch용 대표색만 있다.
  *
  * 블루스카이의 배경색은 두 곳에서 온다.
  *  1) html/body/#root 의 스타일시트 규칙: background-color: white; --background: white;
@@ -7,38 +8,86 @@
  * 인라인 style은 스타일시트의 !important로 덮어쓸 수 있다. react-native-web의 원자 클래스(r-xxxx)는
  * 불안정하므로, 인라인 style 속성의 값으로 요소를 고른다.
  *
- * 선택이 없을 때(최초 설치 등)의 기본값은 "밝음"(블루스카이 그대로)이므로, data-bt-light-theme이
- * 정확히 "comfort"일 때만 적용한다. 대신 "편안"을 고른 사용자는 저장된 값을 읽기 전인 새로고침
- * 직후에 잠깐 흰색 화면이 보일 수 있다.
+ * "mono"가 기본값이고 블루스카이 그대로라서 아무것도 덮어쓰지 않는다. 그래서 설정을 읽기 전(속성이
+ * 없을 때)에도 흰 화면이 그대로 나온다. 대신 mono가 아닌 테마를 고른 사용자는 새로고침 직후 잠깐
+ * 흰색 화면이 보일 수 있다.
  *
  * --text(black)는 그대로 둔다. --rc-* 등 나머지 변수는 아직 건드리지 않는다.
  */
-html.theme--light[data-bt-light-theme="comfort"] {
-  /*
-   * 사용 중인 흰색 계열 배경을 각각 어떤 색으로 바꿀지 직접 적는다.
-   * (원래 색은 인라인 style에서 수집한 값이며, 팔레트의 contrast_0/25/50으로 추정)
-   * 밝기 순서(기본 > hover > 보조 면)가 유지되도록 정한다.
-   */
-  --bt-bg-0: #ededed; /* 255,255,255 기본 배경 */
-  --bt-bg-25: #e7e8e9; /* 249,250,251 hover */
-  --bt-bg-50: #dee1e5; /* 239,242,246 보조 면 (설정 트랙, 스켈레톤 등) */
+
+/*
+ * 테마별 팔레트. 색은 여기에서만 정하고 swatch(theme-section.ts)도 이 변수를 쓴다.
+ * 밝은 쪽: 사용 중인 흰색 계열 배경을 각각 어떤 색으로 바꿀지 직접 적는다.
+ *  -0  = 255,255,255 기본 배경
+ *  -25 = 249,250,251 hover
+ *  -50 = 239,242,246 보조 면 (설정 트랙, 스켈레톤 등)
+ * (원래 색은 인라인 style에서 수집한 값이며, 팔레트의 contrast_0/25/50으로 추정)
+ * 밝기 순서(기본 > hover > 보조 면)가 유지되도록 정한다.
+ * 어두운 쪽: 지금은 -0(기본 배경의 대표색)만 있다.
+ */
+html {
+  /* 흑백: 블루스카이 그대로 (밝음 + 어두움) */
+  --bt-mono-light-0: #ffffff;
+  --bt-mono-light-25: #f9fafb;
+  --bt-mono-light-50: #eff2f6;
+  --bt-mono-dark-0: #000000;
+
+  /* 소프트: 편안 + 어둑함 */
+  --bt-soft-light-0: #ededed;
+  --bt-soft-light-25: #e7e8e9;
+  --bt-soft-light-50: #dee1e5;
+  --bt-soft-dark-0: #151d28;
+
+  /* 노랑: 아주 옅은 겨자색 / 아주 어두운 노란색 */
+  --bt-yellow-light-0: #f6efcf;
+  --bt-yellow-light-25: #efe8c5;
+  --bt-yellow-light-50: #e7dfb8;
+  --bt-yellow-dark-0: #1c1805;
+
+  /* 숲: 옅은 세이지 그린 / 아주 어두운 녹색 */
+  --bt-forest-light-0: #e8efe6;
+  --bt-forest-light-25: #e1e9df;
+  --bt-forest-light-50: #d6e0d3;
+  --bt-forest-dark-0: #0f1a14;
 }
 
+/* 선택한 테마의 밝은 쪽 팔레트를 공통 규칙이 쓰는 변수로 연결한다. (mono는 덮어쓰지 않으므로 없다) */
+html.theme--light[data-bt-theme="soft"] {
+  --bt-bg-0: var(--bt-soft-light-0);
+  --bt-bg-25: var(--bt-soft-light-25);
+  --bt-bg-50: var(--bt-soft-light-50);
+}
+html.theme--light[data-bt-theme="yellow"] {
+  --bt-bg-0: var(--bt-yellow-light-0);
+  --bt-bg-25: var(--bt-yellow-light-25);
+  --bt-bg-50: var(--bt-yellow-light-50);
+}
+html.theme--light[data-bt-theme="forest"] {
+  --bt-bg-0: var(--bt-forest-light-0);
+  --bt-bg-25: var(--bt-forest-light-25);
+  --bt-bg-50: var(--bt-forest-light-50);
+}
+
+/*
+ * 공통 규칙. 변수가 정의되지 않은 값(알 수 없는 테마)이면 !important 때문에 배경이 투명해지므로,
+ * 모든 var()에 블루스카이 원래 색을 대체값으로 둔다.
+ */
+
 /* 1) 스타일시트 규칙 */
-html.theme--light[data-bt-light-theme="comfort"],
-html.theme--light[data-bt-light-theme="comfort"] body,
-html.theme--light[data-bt-light-theme="comfort"] #root {
-  background-color: var(--bt-bg-0);
-  --background: var(--bt-bg-0);
+html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]),
+html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]) body,
+html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]) #root {
+  background-color: var(--bt-bg-0, #ffffff);
+  --background: var(--bt-bg-0, #ffffff);
 }
 
 /* 2) 인라인 style로 배경이 지정된 요소. hover 때 인라인 값이 바뀌어도 선택자가 그대로 걸린다. */
-html.theme--light[data-bt-light-theme="comfort"] [style*="background-color: rgb(255, 255, 255)"] {
-  background-color: var(--bt-bg-0) !important;
+html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]) [style*="background-color: rgb(255, 255, 255)"] {
+  background-color: var(--bt-bg-0, rgb(255, 255, 255)) !important;
 }
-html.theme--light[data-bt-light-theme="comfort"] [style*="background-color: rgb(249, 250, 251)"] {
-  background-color: var(--bt-bg-25) !important;
+html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]) [style*="background-color: rgb(249, 250, 251)"] {
+  background-color: var(--bt-bg-25, rgb(249, 250, 251)) !important;
 }
-html.theme--light[data-bt-light-theme="comfort"] [style*="background-color: rgb(239, 242, 246)"] {
-  background-color: var(--bt-bg-50) !important;
+html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]) [style*="background-color: rgb(239, 242, 246)"] {
+  background-color: var(--bt-bg-50, rgb(239, 242, 246)) !important;
 }

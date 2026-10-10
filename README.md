@@ -4,9 +4,12 @@
 
 ## 기능
 
-- 설정 > 모양(`/settings/appearance`)에서 밝은 테마일 때 "밝은 테마" (편안 / 밝음) 선택 버튼을 추가한다. 선택값은 `chrome.storage.sync`에 저장되고 `<html data-bt-light-theme="comfort|light">`로 반영된다.
-  - **편안**: 밝은 테마의 흰색 배경을 살짝 톤다운한다. ([theme.css](src/content/theme.css))
-  - **밝음** (기본): 블루스카이 밝은 테마 그대로. 선택이 없을 때(최초 설치 등)는 이 값이다.
+- 설정 > 모양(`/settings/appearance`)에 "색상 테마" 선택을 추가한다. 테마는 밝음과 어두움을 묶은 하나의 선택이고, 각 선택지에는 밝음/어두움의 대표색을 보여 주는 작은 원이 붙는다. 선택값은 `chrome.storage.sync`에 저장되고 `<html data-bt-theme="mono|soft|yellow|forest">`로 반영된다. ([themes.ts](src/content/themes.ts), [theme.css](src/content/theme.css))
+  - **흑백** (기본): 블루스카이 그대로. 선택이 없을 때(최초 설치 등)는 이 값이다.
+  - **소프트**: 편안(흰색 배경을 톤다운) + 어둑함.
+  - **노랑**: 아주 옅은 겨자색 / 아주 어두운 노란색.
+  - **숲**: 옅은 세이지 그린 / 아주 어두운 녹색.
+  - **현재 상태:** 밝은 테마의 배경만 적용된다. 어두운 쪽은 대표색(작은 원)만 있고 아직 화면에는 적용되지 않는다. ([docs/pending.md](docs/pending.md))
 - 문구는 한국어(ko)와 영어(en)를 지원한다. `<html lang>`을 보고 고르며, 지원하지 않는 언어는 영어로 표시한다. ([i18n.ts](src/content/i18n.ts))
 
 ## 개발

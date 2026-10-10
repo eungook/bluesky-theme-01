@@ -1,22 +1,17 @@
-import {
-  createLightThemeSection,
-  DEFAULT_LIGHT_THEME,
-  LIGHT_THEMES,
-  type LightThemeId,
-  type LightThemeSection,
-} from "./light-theme-section";
 import { type Locale, MESSAGES, resolveLocale } from "./i18n";
 import { APPEARANCE_PATH, INJECTED_ATTR, LIGHT_THEME_CLASS, RADIOGROUP } from "./selectors";
+import { createThemeSection, type ThemeSection } from "./theme-section";
+import { DEFAULT_THEME, THEMES, type ThemeId } from "./themes";
 
-const STORAGE_KEY = "lightTheme";
-const ROOT_ATTR = "data-bt-light-theme";
+const STORAGE_KEY = "theme";
+const ROOT_ATTR = "data-bt-theme";
 
-let selected: LightThemeId = DEFAULT_LIGHT_THEME;
-let current: (LightThemeSection & { locale: Locale }) | null = null;
+let selected: ThemeId = DEFAULT_THEME;
+let current: (ThemeSection & { locale: Locale }) | null = null;
 
-const isLightThemeId = (v: unknown): v is LightThemeId => LIGHT_THEMES.some((t) => t.id === v);
+const isThemeId = (v: unknown): v is ThemeId => THEMES.some((t) => t.id === v);
 
-function applySelection(id: LightThemeId) {
+function applySelection(id: ThemeId) {
   selected = id;
   document.documentElement.setAttribute(ROOT_ATTR, id);
 }
@@ -29,7 +24,10 @@ function removeInjected() {
   current = null;
 }
 
-/** 설정 > 모양 화면이 밝은 테마일 때만 "밝은 테마" 섹션이 색상 모드 섹션 바로 뒤에 있도록 맞춘다. */
+/**
+ * 설정 > 모양 화면이 밝은 테마일 때만 "색상 테마" 섹션이 색상 모드 섹션 바로 뒤에 있도록 맞춘다.
+ * (어두운 쪽 테마를 지원하면 밝은 테마 조건을 없앤다. docs/pending.md 참고)
+ */
 function sync() {
   const root = document.documentElement;
   if (location.pathname !== APPEARANCE_PATH || !root.classList.contains(LIGHT_THEME_CLASS)) {
@@ -62,7 +60,7 @@ function sync() {
   }
   removeInjected();
 
-  const section = createLightThemeSection(MESSAGES[locale], selected, (id) => {
+  const section = createThemeSection(MESSAGES[locale], selected, (id) => {
     applySelection(id);
     section.update(id);
     void chrome.storage.sync.set({ [STORAGE_KEY]: id });
@@ -91,15 +89,15 @@ new MutationObserver(scheduleSync).observe(document.documentElement, {
 
 chrome.storage.onChanged.addListener((changes, area) => {
   const next = changes[STORAGE_KEY]?.newValue;
-  if (area !== "sync" || !isLightThemeId(next) || next === selected) return;
+  if (area !== "sync" || !isThemeId(next) || next === selected) return;
   applySelection(next);
   removeInjected();
   scheduleSync();
 });
 
-void chrome.storage.sync.get({ [STORAGE_KEY]: DEFAULT_LIGHT_THEME }).then((stored) => {
+void chrome.storage.sync.get({ [STORAGE_KEY]: DEFAULT_THEME }).then((stored) => {
   const value = stored[STORAGE_KEY];
-  applySelection(isLightThemeId(value) ? value : DEFAULT_LIGHT_THEME);
+  applySelection(isThemeId(value) ? value : DEFAULT_THEME);
   removeInjected();
   scheduleSync();
 });

@@ -1,27 +1,17 @@
 import type { Messages } from "./i18n";
 import { INJECTED_ATTR, RADIO } from "./selectors";
-
-// 왼쪽부터 표시된다. id는 <html data-bt-light-theme> 값이며 theme.css의 선택자, i18n의 Messages 키와 맞춰야 한다.
-export const LIGHT_THEMES = [
-  { id: "comfort" }, // 흰색 배경을 톤다운
-  { id: "light" }, // 블루스카이 기본 밝음 테마 그대로
-] as const;
-
-export type LightThemeId = (typeof LIGHT_THEMES)[number]["id"];
-
-// 저장된 선택이 없을 때(최초 설치 등)의 값. theme.css는 "comfort"일 때만 적용되므로 기본은 블루스카이 그대로다.
-export const DEFAULT_LIGHT_THEME: LightThemeId = "light";
+import { THEMES, type ThemeId } from "./themes";
 
 const THUMB_PADDING = 4;
 
-// 이 섹션은 밝은 테마(theme--light)에서만 보이므로 밝은 테마 팔레트만 가진다.
+// 이 섹션은 지금 밝은 테마(theme--light)에서만 보이므로 밝은 테마 팔레트만 가진다.
 // 값은 블루스카이의 "색상 모드" 섹션(밝은 테마)에서 가져왔다. 원본을 복제하면 테마 전환 도중의
 // 어두운 색이 그대로 복사되는 문제가 있어 직접 만든다. (docs/extension-guidelines.md 참고)
 const COLOR = {
   active: "rgb(0, 0, 0)",
   inactive: "rgb(135, 152, 176)",
   track: "rgb(239, 242, 246)",
-  thumb: "rgb(255, 255, 255)", // theme.css가 "편안"일 때 톤다운한다.
+  thumb: "rgb(255, 255, 255)", // theme.css가 선택한 테마의 배경색으로 바꾼다.
 };
 
 const FONT_FAMILY =
@@ -33,11 +23,12 @@ const VIEW =
 const TEXT_STYLE =
   "display:inline;box-sizing:border-box;margin:0;white-space:pre-wrap;overflow-wrap:break-word;letter-spacing:0;";
 
-// 해(sun) 아이콘. 색은 svg의 color(currentColor)를 따른다.
-const SUN_ICON = `
-  <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
-  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+// 팔레트 아이콘. 색은 svg의 color(currentColor)를 따른다.
+const PALETTE_ICON = `
+  <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+  <circle cx="8.5" cy="10.5" r="1.4" fill="currentColor"/>
+  <circle cx="12" cy="7.8" r="1.4" fill="currentColor"/>
+  <circle cx="15.5" cy="10.5" r="1.4" fill="currentColor"/>
 `;
 
 function view(style: string, attrs: Record<string, string> = {}): HTMLDivElement {
@@ -55,24 +46,38 @@ function text(content: string, style: string): HTMLDivElement {
   return el;
 }
 
-export interface LightThemeSection {
-  element: HTMLElement;
-  update(selected: LightThemeId): void;
+/**
+ * 테마의 색을 보여 주는 작은 원. 왼쪽 위는 밝음, 오른쪽 아래는 어두움의 기본 배경색이다.
+ * 색은 theme.css의 변수에서 가져와 색을 한 곳에서만 관리한다. (배경은 background-color가 아니라
+ * background-image로 칠한다. theme.css가 인라인 background-color를 치환하기 때문이다.)
+ */
+function swatch(id: ThemeId): HTMLDivElement {
+  const el = view(
+    "width:14px;height:14px;border-radius:7px;flex-shrink:0;border:1px solid rgba(0, 0, 0, 0.2);" +
+      `background-image:linear-gradient(135deg, var(--bt-${id}-light-0) 50%, var(--bt-${id}-dark-0) 50%);`,
+    { "aria-hidden": "true" },
+  );
+  return el;
 }
 
-/** "밝은 테마" 섹션을 만든다. 블루스카이의 "색상 모드" 섹션과 같은 모양이다. */
-export function createLightThemeSection(
+export interface ThemeSection {
+  element: HTMLElement;
+  update(selected: ThemeId): void;
+}
+
+/** "색상 테마" 섹션을 만든다. 블루스카이의 "색상 모드" 섹션과 같은 모양이다. */
+export function createThemeSection(
   messages: Messages,
-  initial: LightThemeId,
-  onSelect: (id: LightThemeId) => void,
-): LightThemeSection {
+  initial: ThemeId,
+  onSelect: (id: ThemeId) => void,
+): ThemeSection {
   const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   icon.setAttribute("width", "24");
   icon.setAttribute("height", "24");
   icon.setAttribute("viewBox", "0 0 24 24");
   icon.setAttribute("fill", "none");
   icon.setAttribute("style", `color:${COLOR.active}`);
-  icon.innerHTML = SUN_ICON;
+  icon.innerHTML = PALETTE_ICON;
 
   const iconBox = view("z-index:20;width:24px;height:24px;");
   iconBox.append(icon);
@@ -83,7 +88,7 @@ export function createLightThemeSection(
   const thumb = view(
     // theme.css가 style 속성 문자열로 흰 배경을 찾으므로 "background-color: rgb(...)" 형식(콜론 뒤 공백)을 지킨다.
     `position:absolute;background-color: ${COLOR.thumb};top:${THUMB_PADDING}px;bottom:${THUMB_PADDING}px;left:0;` +
-      `width:calc((100% - ${THUMB_PADDING * 2}px) / ${LIGHT_THEMES.length});border-radius:10px;` +
+      `width:calc((100% - ${THUMB_PADDING * 2}px) / ${THEMES.length});border-radius:10px;` +
       "box-shadow:rgba(0, 0, 0, 0.05) 0px 2px 4px 0px;transition-property:transform;transition-duration:100ms;" +
       "transition-timing-function:cubic-bezier(0.17, 0.73, 0.14, 1);",
   );
@@ -94,15 +99,19 @@ export function createLightThemeSection(
   );
   group.append(thumb);
 
-  const items = LIGHT_THEMES.map((theme) => {
+  const items = THEMES.map((theme) => {
     const name = messages[theme.id];
-    const label = text(name, "text-align:center;font-weight:500;padding-left:4px;padding-right:4px;");
+    // 좁은 화면에서도 줄바꿈 없이 한 줄로 두고, 넘치면 말줄임으로 줄인다.
+    const label = text(
+      name,
+      "text-align:center;font-weight:500;padding-left:0;padding-right:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;",
+    );
     const radio = view(
-      "flex-direction:row;align-items:center;justify-content:center;flex:1 1 0%;background-color:transparent;padding:4px 8px;min-height:40px;cursor:pointer;",
+      "flex-direction:row;align-items:center;justify-content:center;gap:8px;flex:1 1 0%;background-color:transparent;padding:4px 8px;min-height:40px;cursor:pointer;",
       { role: "radio", "aria-label": name, tabindex: "0" },
     );
-    radio.append(label);
-    const wrapper = view("flex:1 1 0%;flex-direction:row;");
+    radio.append(swatch(theme.id), label);
+    const wrapper = view("flex:1 1 0%;flex-direction:row;min-width:0;");
     wrapper.append(radio);
     group.append(wrapper);
     return { id: theme.id, radio, label };
@@ -116,7 +125,7 @@ export function createLightThemeSection(
   element.setAttribute(INJECTED_ATTR, "");
   element.append(section);
 
-  function update(selected: LightThemeId) {
+  function update(selected: ThemeId) {
     const index = Math.max(0, items.findIndex((item) => item.id === selected));
     thumb.style.transform = `translateX(calc(${THUMB_PADDING}px + ${index * 100}%))`;
     items.forEach((item, i) => {

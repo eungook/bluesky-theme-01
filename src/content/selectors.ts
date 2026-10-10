@@ -10,4 +10,4 @@ export const RADIOGROUP = '[role="radiogroup"]';
 export const RADIO = '[role="radio"]';
 
 // 우리가 삽입한 요소 표시용
-export const INJECTED_ATTR = "data-bt-light-theme-section";
+export const INJECTED_ATTR = "data-bt-theme-section";
