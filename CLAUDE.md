@@ -8,6 +8,8 @@ This project is a Chrome extension (Manifest V3) for Bluesky web themes. Before 
 
 Follow [docs/development-conventions.md](docs/development-conventions.md): use Bun, edit files with the Edit/Write tools (not python/sed in Bash), and commit on your own in reasonably sized units, with Korean Conventional Commit messages.
 
+Track unresolved questions in [docs/open-questions.md](docs/open-questions.md): read it before starting a task, ask blocking questions up front, log non-blocking ones there with your default, and end your final message with at most 3 "결정 대기" items answerable in one word.
+
 Default to using Bun instead of Node.js.
 
 - Use `bun <file>` instead of `node <file>` or `ts-node <file>`
