@@ -1,9 +1,10 @@
+import type { Messages } from "./i18n";
 import { INJECTED_ATTR, RADIO } from "./selectors";
 
-// 왼쪽부터 표시된다. id는 <html data-bt-light-theme> 값이며 theme.css의 선택자와 맞춰야 한다.
+// 왼쪽부터 표시된다. id는 <html data-bt-light-theme> 값이며 theme.css의 선택자, i18n의 Messages 키와 맞춰야 한다.
 export const LIGHT_THEMES = [
-  { id: "comfort", label: "편안" }, // 흰색 배경을 톤다운
-  { id: "light", label: "밝음" }, // 블루스카이 기본 밝음 테마 그대로
+  { id: "comfort" }, // 흰색 배경을 톤다운
+  { id: "light" }, // 블루스카이 기본 밝음 테마 그대로
 ] as const;
 
 export type LightThemeId = (typeof LIGHT_THEMES)[number]["id"];
@@ -11,7 +12,6 @@ export type LightThemeId = (typeof LIGHT_THEMES)[number]["id"];
 // 저장된 선택이 없을 때(최초 설치 등)의 값. theme.css는 "comfort"일 때만 적용되므로 기본은 블루스카이 그대로다.
 export const DEFAULT_LIGHT_THEME: LightThemeId = "light";
 
-const SECTION_TITLE = "밝은 테마";
 const THUMB_PADDING = 4;
 
 // 이 섹션은 밝은 테마(theme--light)에서만 보이므로 밝은 테마 팔레트만 가진다.
@@ -62,6 +62,7 @@ export interface LightThemeSection {
 
 /** "밝은 테마" 섹션을 만든다. 블루스카이의 "색상 모드" 섹션과 같은 모양이다. */
 export function createLightThemeSection(
+  messages: Messages,
   initial: LightThemeId,
   onSelect: (id: LightThemeId) => void,
 ): LightThemeSection {
@@ -76,7 +77,7 @@ export function createLightThemeSection(
   const iconBox = view("z-index:20;width:24px;height:24px;");
   iconBox.append(icon);
   const header = view("padding:8px 20px 2px;align-items:center;gap:8px;width:100%;flex-direction:row;min-height:42px;");
-  header.append(iconBox, text(SECTION_TITLE, `color:${COLOR.active};text-align:left;font-weight:400;flex:1 1 0%;`));
+  header.append(iconBox, text(messages.title, `color:${COLOR.active};text-align:left;font-weight:400;flex:1 1 0%;`));
 
   // 썸의 크기와 위치는 옵션 개수에 맞춘 비율로 계산한다.
   const thumb = view(
@@ -89,15 +90,16 @@ export function createLightThemeSection(
 
   const group = view(
     `width:100%;flex:1 1 0%;flex-direction:row;background-color: ${COLOR.track};border-radius:14px;padding:${THUMB_PADDING}px;`,
-    { role: "radiogroup", "aria-label": SECTION_TITLE },
+    { role: "radiogroup", "aria-label": messages.title },
   );
   group.append(thumb);
 
   const items = LIGHT_THEMES.map((theme) => {
-    const label = text(theme.label, "text-align:center;font-weight:500;padding-left:4px;padding-right:4px;");
+    const name = messages[theme.id];
+    const label = text(name, "text-align:center;font-weight:500;padding-left:4px;padding-right:4px;");
     const radio = view(
       "flex-direction:row;align-items:center;justify-content:center;flex:1 1 0%;background-color:transparent;padding:4px 8px;min-height:40px;cursor:pointer;",
-      { role: "radio", "aria-label": theme.label, tabindex: "0" },
+      { role: "radio", "aria-label": name, tabindex: "0" },
     );
     radio.append(label);
     const wrapper = view("flex:1 1 0%;flex-direction:row;");

@@ -5,13 +5,14 @@ import {
   type LightThemeId,
   type LightThemeSection,
 } from "./light-theme-section";
+import { type Locale, MESSAGES, resolveLocale } from "./i18n";
 import { APPEARANCE_PATH, INJECTED_ATTR, LIGHT_THEME_CLASS, RADIOGROUP } from "./selectors";
 
 const STORAGE_KEY = "lightTheme";
 const ROOT_ATTR = "data-bt-light-theme";
 
 let selected: LightThemeId = DEFAULT_LIGHT_THEME;
-let current: LightThemeSection | null = null;
+let current: (LightThemeSection & { locale: Locale }) | null = null;
 
 const isLightThemeId = (v: unknown): v is LightThemeId => LIGHT_THEMES.some((t) => t.id === v);
 
@@ -46,9 +47,13 @@ function sync() {
     return;
   }
 
-  // 이미 원본 바로 뒤에 보이는 상태로 있으면 그대로 둔다. React가 원본을 다시 그렸으면 새로 만든다.
+  // 블루스카이의 언어 설정은 <html lang>에 반영된다. 언어가 바뀌면 문구를 새로 그린다.
+  const locale = resolveLocale(root.lang);
+
+  // 이미 원본 바로 뒤에 같은 언어로 보이는 상태로 있으면 그대로 둔다. React가 원본을 다시 그렸으면 새로 만든다.
   if (
     current &&
+    current.locale === locale &&
     current.element.previousElementSibling === source &&
     current.element.isConnected &&
     isVisible(current.element)
@@ -57,13 +62,13 @@ function sync() {
   }
   removeInjected();
 
-  const section = createLightThemeSection(selected, (id) => {
+  const section = createLightThemeSection(MESSAGES[locale], selected, (id) => {
     applySelection(id);
     section.update(id);
     void chrome.storage.sync.set({ [STORAGE_KEY]: id });
   });
   source.after(section.element);
-  current = section;
+  current = { ...section, locale };
 }
 
 let scheduled = false;
@@ -81,7 +86,7 @@ new MutationObserver(scheduleSync).observe(document.documentElement, {
   childList: true,
   subtree: true,
   attributes: true,
-  attributeFilter: ["class", "style"],
+  attributeFilter: ["class", "style", "lang"],
 });
 
 chrome.storage.onChanged.addListener((changes, area) => {
