@@ -30,6 +30,40 @@ function removeInjected() {
 }
 
 /**
+ * 확장을 새로고침/업데이트/비활성화하면 이미 열려 있는 탭의 이전 콘텐츠 스크립트는 그대로 남지만 확장과의
+ * 연결이 끊긴다("Extension context invalidated"). 그 상태에서 chrome.* 를 부르면 오류가 나므로 먼저 확인한다.
+ */
+function isContextAlive(): boolean {
+  try {
+    return Boolean(chrome.runtime?.id);
+  } catch {
+    return false;
+  }
+}
+
+const observer = new MutationObserver(() => scheduleSync());
+
+/** 연결이 끊긴 스크립트는 할 수 있는 일이 없다. 관찰을 멈추고 우리가 만든 UI를 거둬서 눌러도 오류가 나는 버튼을 남기지 않는다. */
+function shutDown() {
+  observer.disconnect();
+  removeInjected();
+}
+
+function saveSelection(id: ThemeId) {
+  if (!isContextAlive()) {
+    shutDown();
+    return;
+  }
+  try {
+    chrome.storage.sync.set({ [STORAGE_KEY]: id }).catch(() => {
+      if (!isContextAlive()) shutDown();
+    });
+  } catch {
+    shutDown();
+  }
+}
+
+/**
  * 어두운 쪽 색은 통합 테마가 정하므로 블루스카이의 "어두운 테마"(어둑함/어두움) 선택은 효과가 없다.
  * 그래서 숨긴다. 우리 섹션 바로 뒤 형제 중 radiogroup이 하나인 것이 그 선택이다.
  * (뒤따르는 글꼴 묶음에는 radiogroup이 둘이다. aria-label은 번역되므로 쓰지 않는다)
@@ -44,6 +78,10 @@ function syncHiddenDarkThemeSection(ours: HTMLElement) {
 
 /** 설정 > 모양 화면에서 "색상 테마" 섹션이 색상 모드 섹션 바로 뒤에 있도록 맞춘다. */
 function sync() {
+  if (!isContextAlive()) {
+    shutDown();
+    return;
+  }
   const root = document.documentElement;
   const base = themeBaseOf(root);
   if (location.pathname !== APPEARANCE_PATH || !base) {
@@ -77,9 +115,14 @@ function sync() {
   if (!reusable) {
     removeInjected();
     const section = createThemeSection(MESSAGES[locale], base, selected, (id) => {
+      // 연결이 끊긴 상태면 화면을 바꾸기 전에 거둔다. (바꿔 봐야 저장되지 않는다)
+      if (!isContextAlive()) {
+        shutDown();
+        return;
+      }
       applySelection(id);
       section.update(id);
-      void chrome.storage.sync.set({ [STORAGE_KEY]: id });
+      saveSelection(id);
     });
     source.after(section.element);
     current = { ...section, locale, base };
@@ -100,7 +143,7 @@ function scheduleSync() {
 }
 
 // run_at: document_start 이므로 body가 없을 수 있다. documentElement를 관찰한다.
-new MutationObserver(scheduleSync).observe(document.documentElement, {
+observer.observe(document.documentElement, {
   childList: true,
   subtree: true,
   attributes: true,

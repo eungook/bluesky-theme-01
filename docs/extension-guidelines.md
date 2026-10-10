@@ -41,6 +41,7 @@ dist/                   # 빌드 산출물 (git 제외)
 4. **Bun 런타임 API를 확장 코드에 쓰지 않는다.** `Bun.serve`, `bun:sqlite`, `Bun.file` 등은 브라우저에서 동작하지 않는다. 빌드 스크립트(`build.ts`)에서만 쓴다.
 5. **개발 중 리로드.** `Bun.serve`의 HMR은 확장 페이지에서 쓸 수 없다. `bun build --watch` 또는 `build.ts`의 watch 모드로 재빌드하고, 확장 새로고침은 `chrome://extensions`에서 하거나 별도 리로드 스크립트를 둔다.
 6. **타입.** `@types/chrome`를 설치해 `chrome.*` API 타입을 쓴다.
+7. **확장을 새로고침하면 열려 있는 탭의 콘텐츠 스크립트는 고아가 된다.** `chrome://extensions`에서 확장을 새로고침(또는 업데이트/비활성화)해도 이미 열려 있던 탭의 이전 스크립트는 그대로 남아 DOM과 이벤트 핸들러를 쥐고 있다. 그러나 확장과의 연결은 끊겨서 `chrome.*`를 부르면 `Uncaught Error: Extension context invalidated.`가 난다. 새 스크립트는 그 탭에 주입되지 않으므로 **페이지를 새로고침해야 한다.** 그래서 [index.ts](../src/content/index.ts)는 `chrome.runtime.id`로 연결이 살아 있는지 확인하고(`isContextAlive`), 끊겼으면 관찰을 멈추고 우리가 삽입한 UI를 거둔다(`shutDown`). 눌러도 오류가 나는 버튼을 남기지 않기 위해서다. `chrome.*`를 새로 부르는 코드는 이 확인을 거쳐야 한다. 개발 중에는 확장을 새로고침한 뒤 페이지도 새로고침한다.
 
 ## 테마 기능 설계 시 고려할 점
 
