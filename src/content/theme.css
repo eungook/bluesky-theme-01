@@ -46,15 +46,15 @@ html {
   --bt-soft-dark-50: #222e3f;
   --bt-soft-dark-100: #2c3a4e;
 
-  /* 노랑: 아주 옅은 겨자색 / 그 색상을 어둡게 한 올리브색 (첫 추정값. 화면을 보며 조정한다) */
+  /* 노랑: 아주 옅은 겨자색 / 밝은 겨자색. 어두운 쪽 기본 배경(-0)은 사용자가 직접 정했고, -25/-50/-100은 같은 색상/채도에서 명도만 올렸다. */
   --bt-yellow-light-0: #f6efcf;
   --bt-yellow-light-25: #efe8c5;
   --bt-yellow-light-50: #e7dfb8;
   --bt-yellow-light-100: #d5d0af;
-  --bt-yellow-dark-0: #473e15;
-  --bt-yellow-dark-25: #574c19;
-  --bt-yellow-dark-50: #67591e;
-  --bt-yellow-dark-100: #867527;
+  --bt-yellow-dark-0: #e5c63c;
+  --bt-yellow-dark-25: #e8cd54;
+  --bt-yellow-dark-50: #ebd46a;
+  --bt-yellow-dark-100: #f0de8e;
 
   /* 숲: 옅은 세이지 그린 / 그 색상을 어둡게 한 녹색 (첫 추정값. 화면을 보며 조정한다) */
   --bt-forest-light-0: #e8efe6;
