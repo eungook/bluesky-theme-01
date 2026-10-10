@@ -79,6 +79,16 @@ bun run package     # out/bluesky-theme-<version>.zip
 - **도구 모음 아이콘:** 누르면 설정 > 모양(`https://bsky.app/settings/appearance`)을 새 탭으로 열거나 이미 열려 있으면 그 탭으로 이동한다. 서비스 워커가 있지만 `tabs` 같은 추가 권한은 쓰지 않는다. 호스트 권한으로 주소를 찾는다.
 - **원격 코드:** 사용하지 않는다. 모든 코드는 패키지 안에 있다.
 
+### English (대시보드에 붙여 넣을 문장)
+
+위 내용을 옮긴 것이다. 대시보드의 항목 이름은 확인해서 맞는 칸에 넣는다. "Toolbar icon"은 별도 칸이 없을 수 있으므로 그때는 호스트 권한 설명 끝에 붙인다.
+
+- **Single purpose:** Lets users choose a color theme for Bluesky on the web (bsky.app).
+- **`storage`:** Stores the one theme name the user picks in `chrome.storage.sync`, so it is applied on later visits and on the user's other devices.
+- **Host permission `https://bsky.app/*`:** Used by a content script to add the theme picker to Settings > Appearance and to change the page's background colors with CSS. The extension does not access any other site.
+- **Toolbar icon:** Clicking the icon opens Settings > Appearance (`https://bsky.app/settings/appearance`) in a new tab, or switches to that tab if it is already open. The extension has a service worker for this, but it uses no additional permission such as `tabs`; it finds the tab by URL through the host permission above.
+- **Remote code:** Not used. All code is included in the package.
+
 ## 개인정보
 
 대시보드의 개인정보 항목에서 수집하는 데이터가 없다고 답할 수 있는지 확인한다(이 확장이 하는 일은 아래와 같다). 처리방침 초안:
