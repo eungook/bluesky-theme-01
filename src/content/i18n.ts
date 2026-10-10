@@ -7,8 +7,16 @@ import type { ThemeId } from "./themes";
 export type Messages = { title: string } & Record<ThemeId, string>;
 
 export const MESSAGES = {
-  en: { title: "Color theme", mono: "Mono", soft: "Soft", yellow: "Yellow", forest: "Forest" },
-  ko: { title: "색상 테마", mono: "흑백", soft: "소프트", yellow: "노랑", forest: "숲" },
+  en: {
+    title: "Color theme",
+    mono: "Mono",
+    soft: "Soft",
+    yellow: "Yellow",
+    forest: "Forest",
+    lavender: "Lavender",
+    sunset: "Sunset",
+  },
+  ko: { title: "색상 테마", mono: "흑백", soft: "소프트", yellow: "노랑", forest: "숲", lavender: "라벤더", sunset: "노을" },
 } satisfies Record<string, Messages>;
 
 export type Locale = keyof typeof MESSAGES;

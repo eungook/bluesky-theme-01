@@ -4,6 +4,10 @@ import { THEMES, type ThemeId } from "./themes";
 
 const THUMB_PADDING = 4;
 
+// 한 줄에 놓는 선택지 수. 테마가 늘면 줄이 늘어난다.
+const COLUMNS = 3;
+const ROWS = Math.ceil(THEMES.length / COLUMNS);
+
 // 블루스카이의 "색상 모드" 섹션이 바탕(밝음/어둑함/어두움)마다 쓰는 색을 그대로 가져왔다.
 // 원본을 복제하면 테마 전환 도중의 다른 바탕 색이 그대로 복사되는 문제가 있어 직접 만든다.
 // track/thumb는 theme.css가 인라인 배경색을 치환하므로 블루스카이 원래 값 그대로 두어야 선택한 테마의 색이 입혀진다.
@@ -115,17 +119,19 @@ export function createThemeSection(
   const header = view("padding:8px 20px 2px;align-items:center;gap:8px;width:100%;flex-direction:row;min-height:42px;");
   header.append(iconBox, text(messages.title, `color:${color.active};text-align:left;font-weight:400;flex:1 1 0%;`));
 
-  // 썸의 크기와 위치는 옵션 개수에 맞춘 비율로 계산한다.
+  // 옵션은 한 줄에 COLUMNS개씩 격자로 놓는다. 썸의 크기와 위치는 칸 수에 맞춘 비율로 계산한다.
+  // (모든 칸의 높이가 같으므로 translateY의 100%가 한 줄이다)
   const thumb = view(
     // theme.css가 style 속성 문자열로 배경색을 찾으므로 "background-color: rgb(...)" 형식(콜론 뒤 공백)을 지킨다.
-    `position:absolute;background-color: ${color.thumb};top:${THUMB_PADDING}px;bottom:${THUMB_PADDING}px;left:0;` +
-      `width:calc((100% - ${THUMB_PADDING * 2}px) / ${THEMES.length});border-radius:10px;` +
-      "box-shadow:rgba(0, 0, 0, 0.05) 0px 2px 4px 0px;transition-property:transform;transition-duration:100ms;" +
+    `position:absolute;background-color: ${color.thumb};top:${THUMB_PADDING}px;left:0;` +
+      `width:calc((100% - ${THUMB_PADDING * 2}px) / ${COLUMNS});height:calc((100% - ${THUMB_PADDING * 2}px) / ${ROWS});` +
+      "border-radius:10px;box-shadow:rgba(0, 0, 0, 0.05) 0px 2px 4px 0px;transition-property:transform;transition-duration:100ms;" +
       "transition-timing-function:cubic-bezier(0.17, 0.73, 0.14, 1);",
   );
 
   const group = view(
-    `width:100%;flex:1 1 0%;flex-direction:row;background-color: ${color.track};border-radius:14px;padding:${THUMB_PADDING}px;`,
+    `width:100%;flex:1 1 0%;display:grid;grid-template-columns:repeat(${COLUMNS}, minmax(0, 1fr));` +
+      `background-color: ${color.track};border-radius:14px;padding:${THUMB_PADDING}px;`,
     { role: "radiogroup", "aria-label": messages.title },
   );
   group.append(thumb);
@@ -158,7 +164,9 @@ export function createThemeSection(
 
   function update(selected: ThemeId) {
     const index = Math.max(0, items.findIndex((item) => item.id === selected));
-    thumb.style.transform = `translateX(calc(${THUMB_PADDING}px + ${index * 100}%))`;
+    const col = index % COLUMNS;
+    const row = Math.floor(index / COLUMNS);
+    thumb.style.transform = `translate(calc(${THUMB_PADDING}px + ${col * 100}%), ${row * 100}%)`;
     items.forEach((item, i) => {
       item.radio.setAttribute("aria-checked", String(i === index));
       item.label.style.color = i === index ? color.active : color.inactive;

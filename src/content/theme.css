@@ -65,6 +65,26 @@ html {
   --bt-forest-dark-25: #17251c;
   --bt-forest-dark-50: #1f3025;
   --bt-forest-dark-100: #2c4435;
+
+  /* 라벤더: 옅은 보라 / 아주 어두운 보라 (첫 추정값. 화면을 보며 조정한다) */
+  --bt-lavender-light-0: #eceaf5;
+  --bt-lavender-light-25: #e5e2f0;
+  --bt-lavender-light-50: #dcd8ea;
+  --bt-lavender-light-100: #c9c4dc;
+  --bt-lavender-dark-0: #161224;
+  --bt-lavender-dark-25: #1f1a32;
+  --bt-lavender-dark-50: #28223f;
+  --bt-lavender-dark-100: #373054;
+
+  /* 노을: 옅은 복숭아색 / 아주 어두운 갈색 (첫 추정값. 화면을 보며 조정한다) */
+  --bt-sunset-light-0: #f8eade;
+  --bt-sunset-light-25: #f1e1d4;
+  --bt-sunset-light-50: #e8d6c7;
+  --bt-sunset-light-100: #d5c0af;
+  --bt-sunset-dark-0: #1e120e;
+  --bt-sunset-dark-25: #291a14;
+  --bt-sunset-dark-50: #34221b;
+  --bt-sunset-dark-100: #463026;
 }
 
 /* 선택한 테마의 팔레트를 공통 규칙이 쓰는 변수(--bt-bg-*)로 연결한다. */
@@ -92,6 +112,18 @@ html.theme--light[data-bt-theme="forest"] {
   --bt-bg-50: var(--bt-forest-light-50);
   --bt-bg-100: var(--bt-forest-light-100);
 }
+html.theme--light[data-bt-theme="lavender"] {
+  --bt-bg-0: var(--bt-lavender-light-0);
+  --bt-bg-25: var(--bt-lavender-light-25);
+  --bt-bg-50: var(--bt-lavender-light-50);
+  --bt-bg-100: var(--bt-lavender-light-100);
+}
+html.theme--light[data-bt-theme="sunset"] {
+  --bt-bg-0: var(--bt-sunset-light-0);
+  --bt-bg-25: var(--bt-sunset-light-25);
+  --bt-bg-50: var(--bt-sunset-light-50);
+  --bt-bg-100: var(--bt-sunset-light-100);
+}
 
 html:is(.theme--dim, .theme--dark)[data-bt-theme="mono"] {
   --bt-bg-0: var(--bt-mono-dark-0);
@@ -116,6 +148,18 @@ html:is(.theme--dim, .theme--dark)[data-bt-theme="forest"] {
   --bt-bg-25: var(--bt-forest-dark-25);
   --bt-bg-50: var(--bt-forest-dark-50);
   --bt-bg-100: var(--bt-forest-dark-100);
+}
+html:is(.theme--dim, .theme--dark)[data-bt-theme="lavender"] {
+  --bt-bg-0: var(--bt-lavender-dark-0);
+  --bt-bg-25: var(--bt-lavender-dark-25);
+  --bt-bg-50: var(--bt-lavender-dark-50);
+  --bt-bg-100: var(--bt-lavender-dark-100);
+}
+html:is(.theme--dim, .theme--dark)[data-bt-theme="sunset"] {
+  --bt-bg-0: var(--bt-sunset-dark-0);
+  --bt-bg-25: var(--bt-sunset-dark-25);
+  --bt-bg-50: var(--bt-sunset-dark-50);
+  --bt-bg-100: var(--bt-sunset-dark-100);
 }
 
 /*

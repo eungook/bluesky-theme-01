@@ -7,6 +7,8 @@ export const THEMES = [
   { id: "soft" }, // 소프트: 편안 + 어둑함
   { id: "yellow" }, // 노랑: 아주 옅은 겨자색 / 아주 어두운 노란색
   { id: "forest" }, // 숲: 옅은 세이지 그린 / 아주 어두운 녹색
+  { id: "lavender" }, // 라벤더: 옅은 보라 / 아주 어두운 보라
+  { id: "sunset" }, // 노을: 옅은 복숭아색 / 아주 어두운 갈색
 ] as const;
 
 export type ThemeId = (typeof THEMES)[number]["id"];
