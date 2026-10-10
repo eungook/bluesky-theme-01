@@ -46,45 +46,45 @@ html {
   --bt-soft-dark-50: #222e3f;
   --bt-soft-dark-100: #2c3a4e;
 
-  /* 노랑: 아주 옅은 겨자색 / 아주 어두운 노란색 (첫 추정값. 화면을 보며 조정한다) */
+  /* 노랑: 아주 옅은 겨자색 / 그 색상을 어둡게 한 올리브색 (첫 추정값. 화면을 보며 조정한다) */
   --bt-yellow-light-0: #f6efcf;
   --bt-yellow-light-25: #efe8c5;
   --bt-yellow-light-50: #e7dfb8;
   --bt-yellow-light-100: #d5d0af;
-  --bt-yellow-dark-0: #1c1805;
-  --bt-yellow-dark-25: #262109;
-  --bt-yellow-dark-50: #302a0d;
-  --bt-yellow-dark-100: #403818;
+  --bt-yellow-dark-0: #2e280f;
+  --bt-yellow-dark-25: #3d3614;
+  --bt-yellow-dark-50: #4d431a;
+  --bt-yellow-dark-100: #675b22;
 
-  /* 숲: 옅은 세이지 그린 / 아주 어두운 녹색 (첫 추정값. 화면을 보며 조정한다) */
+  /* 숲: 옅은 세이지 그린 / 그 색상을 어둡게 한 녹색 (첫 추정값. 화면을 보며 조정한다) */
   --bt-forest-light-0: #e8efe6;
   --bt-forest-light-25: #e1e9df;
   --bt-forest-light-50: #d6e0d3;
   --bt-forest-light-100: #c5d1c9;
-  --bt-forest-dark-0: #0f1a14;
-  --bt-forest-dark-25: #17251c;
-  --bt-forest-dark-50: #1f3025;
-  --bt-forest-dark-100: #2c4435;
+  --bt-forest-dark-0: #192815;
+  --bt-forest-dark-25: #22351d;
+  --bt-forest-dark-50: #2a4224;
+  --bt-forest-dark-100: #395a30;
 
-  /* 라벤더: 옅은 보라 / 아주 어두운 보라 (첫 추정값. 화면을 보며 조정한다) */
+  /* 라벤더: 옅은 보라 / 그 색상을 어둡게 한 보라 (첫 추정값. 화면을 보며 조정한다) */
   --bt-lavender-light-0: #eceaf5;
   --bt-lavender-light-25: #e5e2f0;
   --bt-lavender-light-50: #dcd8ea;
   --bt-lavender-light-100: #c9c4dc;
-  --bt-lavender-dark-0: #161224;
-  --bt-lavender-dark-25: #1f1a32;
-  --bt-lavender-dark-50: #28223f;
-  --bt-lavender-dark-100: #373054;
+  --bt-lavender-dark-0: #17132a;
+  --bt-lavender-dark-25: #1f1938;
+  --bt-lavender-dark-50: #272046;
+  --bt-lavender-dark-100: #342b5f;
 
-  /* 노을: 옅은 복숭아색 / 아주 어두운 갈색 (첫 추정값. 화면을 보며 조정한다) */
+  /* 노을: 옅은 복숭아색 / 그 색상을 어둡게 한 갈색 (첫 추정값. 화면을 보며 조정한다) */
   --bt-sunset-light-0: #f8eade;
   --bt-sunset-light-25: #f1e1d4;
   --bt-sunset-light-50: #e8d6c7;
   --bt-sunset-light-100: #d5c0af;
-  --bt-sunset-dark-0: #1e120e;
-  --bt-sunset-dark-25: #291a14;
-  --bt-sunset-dark-50: #34221b;
-  --bt-sunset-dark-100: #463026;
+  --bt-sunset-dark-0: #2e1d0f;
+  --bt-sunset-dark-25: #3d2714;
+  --bt-sunset-dark-50: #4d311a;
+  --bt-sunset-dark-100: #674222;
 }
 
 /* 선택한 테마의 팔레트를 공통 규칙이 쓰는 변수(--bt-bg-*)로 연결한다. */
