@@ -1,6 +1,6 @@
 # 나중에
 
-지금은 하지 않기로 한 것의 목록. 사람과 에이전트가 같이 읽는다. 지금 정해야 하는 결정은 [pending-decisions.md](pending-decisions.md)에 적는다.
+지금은 하지 않기로 한 것의 목록. 사람과 에이전트가 같이 읽는다. 지금 정해야 하는 결정은 [pending.md](pending.md)에 적는다.
 
 ## 운영 규칙
 
@@ -10,7 +10,7 @@
 - 항목마다 **보류한 날짜**, **다시 꺼낼 조건**, **지금의 상태**, **결과에 따라 바뀌는 것**을 적는다.
 - 에이전트는 이 파일의 항목을 "결정 대기"에 올리지 않는다. 다시 꺼낼 조건이 되었을 때만 사용자에게 알린다.
 - 해결되면 항목을 지운다. 결정 내용은 해당 문서([extension-guidelines.md](extension-guidelines.md) 등)에 기록한다. (이력은 git에 남는다.)
-- 보류한 결정을 다시 정해야 하게 되면 [pending-decisions.md](pending-decisions.md)로 옮긴다.
+- 보류한 결정을 다시 정해야 하게 되면 [pending.md](pending.md)로 옮긴다.
 
 ## 목록
 
