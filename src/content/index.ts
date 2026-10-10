@@ -30,14 +30,14 @@ function removeInjected() {
 }
 
 /**
- * 어두운 쪽에서는 통합 테마가 어두운 색을 정하므로 블루스카이의 "어두운 테마"(어둑함/어두움) 선택은
- * 효과가 없다. 그래서 숨긴다. 우리 섹션 바로 뒤 형제 중 radiogroup이 하나인 것이 그 선택이다.
+ * 어두운 쪽 색은 통합 테마가 정하므로 블루스카이의 "어두운 테마"(어둑함/어두움) 선택은 효과가 없다.
+ * 그래서 숨긴다. 우리 섹션 바로 뒤 형제 중 radiogroup이 하나인 것이 그 선택이다.
  * (뒤따르는 글꼴 묶음에는 radiogroup이 둘이다. aria-label은 번역되므로 쓰지 않는다)
- * 밝은 테마에는 이 선택이 렌더링되지 않는다.
+ * 이 선택은 색상 모드가 "밝음"이면 렌더링되지 않지만, "시스템"이면 OS가 밝아서 지금 바탕이 밝은
+ * 테마여도 렌더링된다(사용자 화면으로 확인). 그래서 바탕과 상관없이 찾아서 숨긴다.
  */
-function syncHiddenDarkThemeSection(ours: HTMLElement, base: ThemeBase) {
+function syncHiddenDarkThemeSection(ours: HTMLElement) {
   showHidden();
-  if (base === "light") return;
   const next = ours.nextElementSibling;
   if (next && next.querySelectorAll(RADIOGROUP).length === 1) next.setAttribute(HIDDEN_ATTR, "");
 }
@@ -86,7 +86,7 @@ function sync() {
   }
 
   // 블루스카이가 해당 부분을 다시 그렸을 수 있으므로 섹션이 그대로여도 매번 맞춘다.
-  if (current) syncHiddenDarkThemeSection(current.element, base);
+  if (current) syncHiddenDarkThemeSection(current.element);
 }
 
 let scheduled = false;
