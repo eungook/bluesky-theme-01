@@ -51,10 +51,10 @@ html {
   --bt-yellow-light-25: #efe8c5;
   --bt-yellow-light-50: #e7dfb8;
   --bt-yellow-light-100: #d5d0af;
-  --bt-yellow-dark-0: #e5c63c;
-  --bt-yellow-dark-25: #e8cd54;
-  --bt-yellow-dark-50: #ebd46a;
-  --bt-yellow-dark-100: #f0de8e;
+  --bt-yellow-dark-0: #c4a92f;
+  --bt-yellow-dark-25: #d0b53c;
+  --bt-yellow-dark-50: #d5bd51;
+  --bt-yellow-dark-100: #ddca72;
 
   /* 숲: 옅은 세이지 그린 / 그 색상을 어둡게 한 녹색 (첫 추정값. 화면을 보며 조정한다) */
   --bt-forest-light-0: #e8efe6;
