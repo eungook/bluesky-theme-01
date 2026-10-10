@@ -13,6 +13,7 @@
     "build": "bun run build.ts",
     "dev": "bun run build.ts --watch",
     "icons": "bun run scripts/build-icons.ts",
+    "package": "bun run scripts/package.ts",
     "typecheck": "tsc"
   }
 }

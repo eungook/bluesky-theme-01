@@ -23,12 +23,17 @@ bun run build       # dist/ 생성
 bun run dev         # 변경 시 자동 재빌드
 bun run typecheck
 bun run icons       # src/icons/icon.svg에서 아이콘 PNG를 다시 만든다 (macOS + Chrome 필요)
+bun run package     # 스토어에 올릴 out/bluesky-theme-<version>.zip을 만든다
 ```
 
 `dist/`를 `chrome://extensions`의 "압축해제된 확장 프로그램을 로드합니다"로 불러온다.
 
 확장 아이콘은 [src/icons/](src/icons/)에 있다. 원본은 `icon.svg`이고 16/32/48/128px PNG는 `bun run icons`로 만든다. 모양을 바꿀 때만 다시 만들고 PNG를 같이 커밋한다.
+
+현재 버전은 1.0.0이다(`src/manifest.json`의 `version`). 스토어에 올리는 방법은 [store-submission.md](docs/store-submission.md)에 있고, 올릴 때마다 `version`을 먼저 올린다.
+
 더 자세한 내용은 [docs/](docs/)를 참고한다.
 
 - [extension-guidelines.md](docs/extension-guidelines.md): 빌드 주의사항, 블루스카이 DOM 메모
+- [store-submission.md](docs/store-submission.md): 크롬 웹 스토어 등록
 - [development-conventions.md](docs/development-conventions.md): 도구와 커밋 규칙
