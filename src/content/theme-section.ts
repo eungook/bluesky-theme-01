@@ -134,7 +134,8 @@ export function createThemeSection(
   const group = view(
     `width:100%;flex:1 1 0%;display:grid;grid-template-columns:repeat(${COLUMNS}, minmax(0, 1fr));` +
       `background-color: ${color.track};border-radius:14px;padding:${THUMB_PADDING}px;`,
-    { role: "radiogroup", "aria-label": messages.title },
+    // data-bt-theme-group은 theme.css가 폭에 따라 이름을 숨길 때 기준(컨테이너)으로 쓴다.
+    { role: "radiogroup", "aria-label": messages.title, "data-bt-theme-group": "" },
   );
   group.append(thumb);
 
@@ -149,6 +150,9 @@ export function createThemeSection(
       "flex-direction:row;align-items:center;justify-content:center;gap:8px;flex:1 1 0%;background-color:transparent;padding:12px 8px;min-height:56px;cursor:pointer;",
       { role: "radio", "aria-label": name, tabindex: "0" },
     );
+    // 이름은 아주 좁으면 숨겨진다(theme.css). 그때도 이름을 알 수 있도록 aria-label과 툴팁(title)을 둔다.
+    label.setAttribute("data-bt-theme-label", "");
+    radio.setAttribute("title", name);
     radio.append(swatch(theme.id, base, color.swatchRing), label);
     const wrapper = view("flex:1 1 0%;flex-direction:row;min-width:0;");
     wrapper.append(radio);

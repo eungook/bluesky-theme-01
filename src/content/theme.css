@@ -231,6 +231,22 @@ html.theme--dark[data-bt-theme] [style*="background-color: rgb(35, 46, 62)"] {
   background-color: var(--bt-bg-100, rgb(35, 46, 62)) !important;
 }
 
+/*
+ * 색상 테마 선택이 너무 좁으면(폭 약 400px 미만) 이름을 숨기고 색 원만 보여 준다. 이름이 긴 영어/일본어
+ * (Lavender, ラベンダー 등)가 잘리는 것을 피하기 위해서다. 화면(뷰포트)이 아니라 선택 영역의 폭을 기준으로
+ * 하므로 컨테이너 쿼리를 쓴다. 이름은 aria-label과 title(툴팁)으로 남는다. (theme-section.ts 참고)
+ * 한 칸의 글자 공간이 약 75px(일본어 ラベンダー)는 되어야 하는데, 3칸이면 선택 영역이 약 400px 이상일 때다.
+ */
+[data-bt-theme-group] {
+  container-type: inline-size;
+  container-name: bt-theme-group;
+}
+@container bt-theme-group (max-width: 400px) {
+  [data-bt-theme-label] {
+    display: none !important;
+  }
+}
+
 /* 확장이 숨긴 블루스카이 요소. (어두운 쪽의 "어두운 테마" 선택. index.ts 참고) */
 [data-bt-hidden] {
   display: none !important;
