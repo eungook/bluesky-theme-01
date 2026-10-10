@@ -146,7 +146,7 @@ export function createThemeSection(
       "text-align:center;font-weight:500;padding-left:0;padding-right:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;",
     );
     const radio = view(
-      "flex-direction:row;align-items:center;justify-content:center;gap:8px;flex:1 1 0%;background-color:transparent;padding:4px 8px;min-height:40px;cursor:pointer;",
+      "flex-direction:row;align-items:center;justify-content:center;gap:8px;flex:1 1 0%;background-color:transparent;padding:12px 8px;min-height:56px;cursor:pointer;",
       { role: "radio", "aria-label": name, tabindex: "0" },
     );
     radio.append(swatch(theme.id, base, color.swatchRing), label);
