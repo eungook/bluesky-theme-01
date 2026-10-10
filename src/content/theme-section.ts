@@ -1,17 +1,46 @@
 import type { Messages } from "./i18n";
-import { INJECTED_ATTR, RADIO } from "./selectors";
+import { INJECTED_ATTR, RADIO, type ThemeBase } from "./selectors";
 import { THEMES, type ThemeId } from "./themes";
 
 const THUMB_PADDING = 4;
 
-// 이 섹션은 지금 밝은 테마(theme--light)에서만 보이므로 밝은 테마 팔레트만 가진다.
-// 값은 블루스카이의 "색상 모드" 섹션(밝은 테마)에서 가져왔다. 원본을 복제하면 테마 전환 도중의
-// 어두운 색이 그대로 복사되는 문제가 있어 직접 만든다. (docs/extension-guidelines.md 참고)
-const COLOR = {
-  active: "rgb(0, 0, 0)",
-  inactive: "rgb(135, 152, 176)",
-  track: "rgb(239, 242, 246)",
-  thumb: "rgb(255, 255, 255)", // theme.css가 선택한 테마의 배경색으로 바꾼다.
+// 블루스카이의 "색상 모드" 섹션이 바탕(밝음/어둑함/어두움)마다 쓰는 색을 그대로 가져왔다.
+// 원본을 복제하면 테마 전환 도중의 다른 바탕 색이 그대로 복사되는 문제가 있어 직접 만든다.
+// track/thumb는 theme.css가 인라인 배경색을 치환하므로 블루스카이 원래 값 그대로 두어야 선택한 테마의 색이 입혀진다.
+// (docs/extension-guidelines.md 참고)
+interface Palette {
+  active: string;
+  inactive: string;
+  track: string;
+  thumb: string;
+  swatchBorder: string;
+}
+
+const PALETTES: Record<ThemeBase, Palette> = {
+  light: {
+    active: "rgb(0, 0, 0)",
+    inactive: "rgb(135, 152, 176)",
+    track: "rgb(239, 242, 246)",
+    thumb: "rgb(255, 255, 255)",
+    swatchBorder: "rgba(0, 0, 0, 0.2)",
+  },
+  // 어둑함의 값은 블루스카이 화면(설정 > 모양)의 HTML에서 확인한 값이다.
+  dim: {
+    active: "rgb(255, 255, 255)",
+    inactive: "rgb(88, 108, 137)",
+    track: "rgb(34, 46, 63)",
+    thumb: "rgb(21, 29, 40)",
+    swatchBorder: "rgba(255, 255, 255, 0.3)",
+  },
+  // 어두움의 track과 inactive는 직접 확인하지 못했다. track은 수집한 인라인 배경색의 밝기 순서로,
+  // inactive는 어둑함과 같다고 추정했다.
+  dark: {
+    active: "rgb(255, 255, 255)",
+    inactive: "rgb(88, 108, 137)",
+    track: "rgb(25, 34, 46)",
+    thumb: "rgb(0, 0, 0)",
+    swatchBorder: "rgba(255, 255, 255, 0.3)",
+  },
 };
 
 const FONT_FAMILY =
@@ -51,9 +80,9 @@ function text(content: string, style: string): HTMLDivElement {
  * 색은 theme.css의 변수에서 가져와 색을 한 곳에서만 관리한다. (배경은 background-color가 아니라
  * background-image로 칠한다. theme.css가 인라인 background-color를 치환하기 때문이다.)
  */
-function swatch(id: ThemeId): HTMLDivElement {
+function swatch(id: ThemeId, border: string): HTMLDivElement {
   const el = view(
-    "width:14px;height:14px;border-radius:7px;flex-shrink:0;border:1px solid rgba(0, 0, 0, 0.2);" +
+    `width:14px;height:14px;border-radius:7px;flex-shrink:0;border:1px solid ${border};` +
       `background-image:linear-gradient(135deg, var(--bt-${id}-light-0) 50%, var(--bt-${id}-dark-0) 50%);`,
     { "aria-hidden": "true" },
   );
@@ -65,36 +94,38 @@ export interface ThemeSection {
   update(selected: ThemeId): void;
 }
 
-/** "색상 테마" 섹션을 만든다. 블루스카이의 "색상 모드" 섹션과 같은 모양이다. */
+/** "색상 테마" 섹션을 만든다. 블루스카이의 "색상 모드" 섹션과 같은 모양이고 색은 지금 바탕에 맞춘다. */
 export function createThemeSection(
   messages: Messages,
+  base: ThemeBase,
   initial: ThemeId,
   onSelect: (id: ThemeId) => void,
 ): ThemeSection {
+  const color = PALETTES[base];
   const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   icon.setAttribute("width", "24");
   icon.setAttribute("height", "24");
   icon.setAttribute("viewBox", "0 0 24 24");
   icon.setAttribute("fill", "none");
-  icon.setAttribute("style", `color:${COLOR.active}`);
+  icon.setAttribute("style", `color:${color.active}`);
   icon.innerHTML = PALETTE_ICON;
 
   const iconBox = view("z-index:20;width:24px;height:24px;");
   iconBox.append(icon);
   const header = view("padding:8px 20px 2px;align-items:center;gap:8px;width:100%;flex-direction:row;min-height:42px;");
-  header.append(iconBox, text(messages.title, `color:${COLOR.active};text-align:left;font-weight:400;flex:1 1 0%;`));
+  header.append(iconBox, text(messages.title, `color:${color.active};text-align:left;font-weight:400;flex:1 1 0%;`));
 
   // 썸의 크기와 위치는 옵션 개수에 맞춘 비율로 계산한다.
   const thumb = view(
-    // theme.css가 style 속성 문자열로 흰 배경을 찾으므로 "background-color: rgb(...)" 형식(콜론 뒤 공백)을 지킨다.
-    `position:absolute;background-color: ${COLOR.thumb};top:${THUMB_PADDING}px;bottom:${THUMB_PADDING}px;left:0;` +
+    // theme.css가 style 속성 문자열로 배경색을 찾으므로 "background-color: rgb(...)" 형식(콜론 뒤 공백)을 지킨다.
+    `position:absolute;background-color: ${color.thumb};top:${THUMB_PADDING}px;bottom:${THUMB_PADDING}px;left:0;` +
       `width:calc((100% - ${THUMB_PADDING * 2}px) / ${THEMES.length});border-radius:10px;` +
       "box-shadow:rgba(0, 0, 0, 0.05) 0px 2px 4px 0px;transition-property:transform;transition-duration:100ms;" +
       "transition-timing-function:cubic-bezier(0.17, 0.73, 0.14, 1);",
   );
 
   const group = view(
-    `width:100%;flex:1 1 0%;flex-direction:row;background-color: ${COLOR.track};border-radius:14px;padding:${THUMB_PADDING}px;`,
+    `width:100%;flex:1 1 0%;flex-direction:row;background-color: ${color.track};border-radius:14px;padding:${THUMB_PADDING}px;`,
     { role: "radiogroup", "aria-label": messages.title },
   );
   group.append(thumb);
@@ -110,7 +141,7 @@ export function createThemeSection(
       "flex-direction:row;align-items:center;justify-content:center;gap:8px;flex:1 1 0%;background-color:transparent;padding:4px 8px;min-height:40px;cursor:pointer;",
       { role: "radio", "aria-label": name, tabindex: "0" },
     );
-    radio.append(swatch(theme.id), label);
+    radio.append(swatch(theme.id, color.swatchBorder), label);
     const wrapper = view("flex:1 1 0%;flex-direction:row;min-width:0;");
     wrapper.append(radio);
     group.append(wrapper);
@@ -130,7 +161,7 @@ export function createThemeSection(
     thumb.style.transform = `translateX(calc(${THUMB_PADDING}px + ${index * 100}%))`;
     items.forEach((item, i) => {
       item.radio.setAttribute("aria-checked", String(i === index));
-      item.label.style.color = i === index ? COLOR.active : COLOR.inactive;
+      item.label.style.color = i === index ? color.active : color.inactive;
     });
   }
 

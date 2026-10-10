@@ -17,19 +17,4 @@
 
 ## 목록
 
-### 어두운 쪽 구현에 필요한 자료 — 사용자 할 일 (작업을 막는 중)
-
-- **상태:** 어두운 쪽 적용 방식은 A로 정했다(가이드라인의 "범위 결정"). 어둑함(`theme--dim`)의 목록은 받았지만(가이드라인에 기록) 어두움의 목록이 없어서 구현을 시작하지 못한다. 흑백의 어두운 쪽은 어두움 팔레트로 칠하므로, 어둑함 바탕에서 흑백으로 옮기는 값에도 어두움의 색이 필요하다. 어두운 쪽은 지금 적용되지 않고, 색상 테마 섹션은 밝은 테마에서만 보인다.
-- **할 일:** 어둑함의 목록은 받았다(2026-10-10). 어두움에서 인라인 배경색을 수집해서 알려 준다.
-  1. 블루스카이를 색상 모드 "어두움", 어두운 테마 "어두움"으로 둔다. 페이지를 새로고침한다.
-  2. 콘솔에 아래를 붙여 넣는다.
-     ```js
-     window.__seen = new Map();
-     const scan = (el) => { const c = el.style?.backgroundColor; if (c) __seen.set(c, (__seen.get(c) || 0) + 1); };
-     document.querySelectorAll('[style]').forEach(scan);
-     new MutationObserver((ms) => ms.forEach((m) => scan(m.target))).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['style'] });
-     ```
-  3. 설정, 프로필, 피드, 알림 등 여러 화면을 돌아다니며 항목 위에 마우스를 올린다. (hover 색을 모으기 위해서다.)
-  4. 콘솔에서 `copy(JSON.stringify([...__seen]))`를 실행해 결과를 붙여 넣어 알려 준다. `document.documentElement.className` 값도 함께 알려 준다.
-  5. (`theme--dim`은 확인됨. 어두움은 `theme--dark`로 추정하므로 4에서 클래스 값을 꼭 알려 준다.)
-- **자료로 하는 일:** 어둑함/어두움 각각의 색을 통합 테마별 목표 팔레트로 옮기는 치환표(바탕마다 한 벌)를 만든다. 색상 테마 섹션의 "밝은 테마에서만 표시" 조건을 없애고, 블루스카이의 "어두운 테마" 선택 섹션을 숨긴다.
+현재 없음.

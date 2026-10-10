@@ -1,6 +1,7 @@
 /*
  * 통합 테마. <html data-bt-theme="mono|soft|yellow|forest">로 선택된다. (ids는 themes.ts와 맞춘다)
- * 지금은 밝은 테마(html.theme--light)만 적용한다. 어두운 쪽(--bt-<id>-dark-*)은 swatch용 대표색만 있다.
+ * 블루스카이의 바탕(html.theme--light / theme--dim / theme--dark)마다 인라인 배경색을 선택한 테마의
+ * 색으로 치환한다. 어두운 쪽은 바탕(어둑함/어두움)과 상관없이 선택한 테마의 어두운 색으로 칠한다.
  *
  * 블루스카이의 배경색은 두 곳에서 온다.
  *  1) html/body/#root 의 스타일시트 규칙: background-color: white; --background: white;
@@ -8,22 +9,21 @@
  * 인라인 style은 스타일시트의 !important로 덮어쓸 수 있다. react-native-web의 원자 클래스(r-xxxx)는
  * 불안정하므로, 인라인 style 속성의 값으로 요소를 고른다.
  *
- * "mono"가 기본값이고 블루스카이 그대로라서 아무것도 덮어쓰지 않는다. 그래서 설정을 읽기 전(속성이
- * 없을 때)에도 흰 화면이 그대로 나온다. 대신 mono가 아닌 테마를 고른 사용자는 새로고침 직후 잠깐
- * 흰색 화면이 보일 수 있다.
+ * 설정을 읽기 전(data-bt-theme 속성이 없을 때)에는 어떤 규칙도 걸리지 않아 블루스카이 그대로 나온다.
+ * 대신 흑백이 아닌 테마를 고른 사용자는 새로고침 직후 잠깐 블루스카이 원래 색이 보일 수 있다.
  *
- * --text(black)는 그대로 둔다. --rc-* 등 나머지 변수는 아직 건드리지 않는다.
+ * --text 등 글자색과 --rc-* 같은 나머지 변수는 아직 건드리지 않는다.
  */
 
 /*
  * 테마별 팔레트. 색은 여기에서만 정하고 swatch(theme-section.ts)도 이 변수를 쓴다.
- * 밝은 쪽: 사용 중인 흰색 계열 배경을 각각 어떤 색으로 바꿀지 직접 적는다.
- *  -0  = 255,255,255 기본 배경
- *  -25 = 249,250,251 hover
- *  -50 = 239,242,246 보조 면 (설정 트랙, 스켈레톤 등)
- * (원래 색은 인라인 style에서 수집한 값이며, 팔레트의 contrast_0/25/50으로 추정)
- * 밝기 순서(기본 > hover > 보조 면)가 유지되도록 정한다.
- * 어두운 쪽: 지금은 -0(기본 배경의 대표색)만 있다.
+ * 단계는 블루스카이 팔레트에서 쓰는 배경 계열에 대응한다.
+ *  -0   기본 배경       (밝음 255,255,255 / 어둑함 21,29,40 / 어두움 0,0,0)
+ *  -25  hover           (밝음 249,250,251 / 어둑함 28,39,54 / 어두움 17,24,34)
+ *  -50  보조 면         (밝음 239,242,246 / 어둑함 34,46,63 / 어두움 25,34,46)  설정 트랙, 스켈레톤 등
+ *  -100 어두운 쪽만     (어둑함 44,58,78 / 어두움 35,46,62)
+ * 밝은 쪽은 기본 > hover > 보조 면, 어두운 쪽은 기본 < hover < 보조 면 < -100 순서가 유지되게 정한다.
+ * (hover 단계는 밝기 순서로 추정한 대응이다. docs/extension-guidelines.md 참고)
  */
 html {
   /* 흑백: 블루스카이 그대로 (밝음 + 어두움) */
@@ -31,27 +31,44 @@ html {
   --bt-mono-light-25: #f9fafb;
   --bt-mono-light-50: #eff2f6;
   --bt-mono-dark-0: #000000;
+  --bt-mono-dark-25: #111822;
+  --bt-mono-dark-50: #19222e;
+  --bt-mono-dark-100: #232e3e;
 
   /* 소프트: 편안 + 어둑함 */
   --bt-soft-light-0: #ededed;
   --bt-soft-light-25: #e7e8e9;
   --bt-soft-light-50: #dee1e5;
   --bt-soft-dark-0: #151d28;
+  --bt-soft-dark-25: #1c2736;
+  --bt-soft-dark-50: #222e3f;
+  --bt-soft-dark-100: #2c3a4e;
 
   /* 노랑: 아주 옅은 겨자색 / 아주 어두운 노란색 (첫 추정값. 화면을 보며 조정한다) */
   --bt-yellow-light-0: #f6efcf;
   --bt-yellow-light-25: #efe8c5;
   --bt-yellow-light-50: #e7dfb8;
   --bt-yellow-dark-0: #1c1805;
+  --bt-yellow-dark-25: #262109;
+  --bt-yellow-dark-50: #302a0d;
+  --bt-yellow-dark-100: #403818;
 
   /* 숲: 옅은 세이지 그린 / 아주 어두운 녹색 (첫 추정값. 화면을 보며 조정한다) */
   --bt-forest-light-0: #e8efe6;
   --bt-forest-light-25: #e1e9df;
   --bt-forest-light-50: #d6e0d3;
   --bt-forest-dark-0: #0f1a14;
+  --bt-forest-dark-25: #17251c;
+  --bt-forest-dark-50: #1f3025;
+  --bt-forest-dark-100: #2c4435;
 }
 
-/* 선택한 테마의 밝은 쪽 팔레트를 공통 규칙이 쓰는 변수로 연결한다. (mono는 덮어쓰지 않으므로 없다) */
+/* 선택한 테마의 팔레트를 공통 규칙이 쓰는 변수(--bt-bg-*)로 연결한다. */
+html.theme--light[data-bt-theme="mono"] {
+  --bt-bg-0: var(--bt-mono-light-0);
+  --bt-bg-25: var(--bt-mono-light-25);
+  --bt-bg-50: var(--bt-mono-light-50);
+}
 html.theme--light[data-bt-theme="soft"] {
   --bt-bg-0: var(--bt-soft-light-0);
   --bt-bg-25: var(--bt-soft-light-25);
@@ -68,26 +85,98 @@ html.theme--light[data-bt-theme="forest"] {
   --bt-bg-50: var(--bt-forest-light-50);
 }
 
+html:is(.theme--dim, .theme--dark)[data-bt-theme="mono"] {
+  --bt-bg-0: var(--bt-mono-dark-0);
+  --bt-bg-25: var(--bt-mono-dark-25);
+  --bt-bg-50: var(--bt-mono-dark-50);
+  --bt-bg-100: var(--bt-mono-dark-100);
+}
+html:is(.theme--dim, .theme--dark)[data-bt-theme="soft"] {
+  --bt-bg-0: var(--bt-soft-dark-0);
+  --bt-bg-25: var(--bt-soft-dark-25);
+  --bt-bg-50: var(--bt-soft-dark-50);
+  --bt-bg-100: var(--bt-soft-dark-100);
+}
+html:is(.theme--dim, .theme--dark)[data-bt-theme="yellow"] {
+  --bt-bg-0: var(--bt-yellow-dark-0);
+  --bt-bg-25: var(--bt-yellow-dark-25);
+  --bt-bg-50: var(--bt-yellow-dark-50);
+  --bt-bg-100: var(--bt-yellow-dark-100);
+}
+html:is(.theme--dim, .theme--dark)[data-bt-theme="forest"] {
+  --bt-bg-0: var(--bt-forest-dark-0);
+  --bt-bg-25: var(--bt-forest-dark-25);
+  --bt-bg-50: var(--bt-forest-dark-50);
+  --bt-bg-100: var(--bt-forest-dark-100);
+}
+
 /*
  * 공통 규칙. 변수가 정의되지 않은 값(알 수 없는 테마)이면 !important 때문에 배경이 투명해지므로,
- * 모든 var()에 블루스카이 원래 색을 대체값으로 둔다.
+ * 모든 var()에 블루스카이 원래 색을 대체값으로 둔다. 어두운 쪽 대체값은 그 바탕의 원래 색이다.
  */
 
-/* 1) 스타일시트 규칙 */
-html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]),
-html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]) body,
-html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]) #root {
+/* 1) 스타일시트 규칙. 대체값은 바탕마다 다르므로 따로 둔다. */
+html.theme--light[data-bt-theme],
+html.theme--light[data-bt-theme] body,
+html.theme--light[data-bt-theme] #root {
   background-color: var(--bt-bg-0, #ffffff);
   --background: var(--bt-bg-0, #ffffff);
 }
+html.theme--dim[data-bt-theme],
+html.theme--dim[data-bt-theme] body,
+html.theme--dim[data-bt-theme] #root {
+  background-color: var(--bt-bg-0, rgb(21, 29, 40));
+  --background: var(--bt-bg-0, rgb(21, 29, 40));
+}
+html.theme--dark[data-bt-theme],
+html.theme--dark[data-bt-theme] body,
+html.theme--dark[data-bt-theme] #root {
+  background-color: var(--bt-bg-0, #000000);
+  --background: var(--bt-bg-0, #000000);
+}
 
 /* 2) 인라인 style로 배경이 지정된 요소. hover 때 인라인 값이 바뀌어도 선택자가 그대로 걸린다. */
-html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]) [style*="background-color: rgb(255, 255, 255)"] {
+
+/* 밝음 */
+html.theme--light[data-bt-theme] [style*="background-color: rgb(255, 255, 255)"] {
   background-color: var(--bt-bg-0, rgb(255, 255, 255)) !important;
 }
-html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]) [style*="background-color: rgb(249, 250, 251)"] {
+html.theme--light[data-bt-theme] [style*="background-color: rgb(249, 250, 251)"] {
   background-color: var(--bt-bg-25, rgb(249, 250, 251)) !important;
 }
-html.theme--light[data-bt-theme]:not([data-bt-theme="mono"]) [style*="background-color: rgb(239, 242, 246)"] {
+html.theme--light[data-bt-theme] [style*="background-color: rgb(239, 242, 246)"] {
   background-color: var(--bt-bg-50, rgb(239, 242, 246)) !important;
+}
+
+/* 어둑함 */
+html.theme--dim[data-bt-theme] [style*="background-color: rgb(21, 29, 40)"] {
+  background-color: var(--bt-bg-0, rgb(21, 29, 40)) !important;
+}
+html.theme--dim[data-bt-theme] [style*="background-color: rgb(28, 39, 54)"] {
+  background-color: var(--bt-bg-25, rgb(28, 39, 54)) !important;
+}
+html.theme--dim[data-bt-theme] [style*="background-color: rgb(34, 46, 63)"] {
+  background-color: var(--bt-bg-50, rgb(34, 46, 63)) !important;
+}
+html.theme--dim[data-bt-theme] [style*="background-color: rgb(44, 58, 78)"] {
+  background-color: var(--bt-bg-100, rgb(44, 58, 78)) !important;
+}
+
+/* 어두움. rgba(0, 0, 0, 0)처럼 "rgba("로 시작하는 값에는 걸리지 않는다. */
+html.theme--dark[data-bt-theme] [style*="background-color: rgb(0, 0, 0)"] {
+  background-color: var(--bt-bg-0, rgb(0, 0, 0)) !important;
+}
+html.theme--dark[data-bt-theme] [style*="background-color: rgb(17, 24, 34)"] {
+  background-color: var(--bt-bg-25, rgb(17, 24, 34)) !important;
+}
+html.theme--dark[data-bt-theme] [style*="background-color: rgb(25, 34, 46)"] {
+  background-color: var(--bt-bg-50, rgb(25, 34, 46)) !important;
+}
+html.theme--dark[data-bt-theme] [style*="background-color: rgb(35, 46, 62)"] {
+  background-color: var(--bt-bg-100, rgb(35, 46, 62)) !important;
+}
+
+/* 확장이 숨긴 블루스카이 요소. (어두운 쪽의 "어두운 테마" 선택. index.ts 참고) */
+[data-bt-hidden] {
+  display: none !important;
 }

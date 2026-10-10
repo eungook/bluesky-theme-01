@@ -1,6 +1,7 @@
 // 통합 테마: 밝음과 어두움을 한 묶음으로 고른다. 왼쪽부터 표시된다.
 // id는 <html data-bt-theme> 값이며 theme.css의 선택자와 i18n의 Messages 키와 맞춰야 한다.
-// 색은 theme.css에 있다. (--bt-<id>-light-*, --bt-<id>-dark-*)
+// 색은 theme.css에 있다. (--bt-<id>-light-0/25/50, --bt-<id>-dark-0/25/50/100)
+// 어두운 쪽은 블루스카이의 어둑함/어두움 선택과 상관없이 이 테마의 어두운 색으로 칠한다.
 export const THEMES = [
   { id: "mono" }, // 흑백: 블루스카이 기본 (밝음 + 어두움)
   { id: "soft" }, // 소프트: 편안 + 어둑함
