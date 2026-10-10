@@ -17,7 +17,7 @@ interface Palette {
   inactive: string;
   track: string;
   thumb: string;
-  swatchBorder: string;
+  swatchRing: string;
 }
 
 const PALETTES: Record<ThemeBase, Palette> = {
@@ -26,7 +26,7 @@ const PALETTES: Record<ThemeBase, Palette> = {
     inactive: "rgb(135, 152, 176)",
     track: "rgb(239, 242, 246)",
     thumb: "rgb(255, 255, 255)",
-    swatchBorder: "rgba(0, 0, 0, 0.2)",
+    swatchRing: "rgba(0, 0, 0, 0.2)",
   },
   // 어둑함의 값은 블루스카이 화면(설정 > 모양)의 HTML에서 확인한 값이다.
   dim: {
@@ -34,7 +34,7 @@ const PALETTES: Record<ThemeBase, Palette> = {
     inactive: "rgb(88, 108, 137)",
     track: "rgb(34, 46, 63)",
     thumb: "rgb(21, 29, 40)",
-    swatchBorder: "rgba(255, 255, 255, 0.3)",
+    swatchRing: "rgba(255, 255, 255, 0.3)",
   },
   // 어두움의 track과 inactive는 직접 확인하지 못했다. track은 수집한 인라인 배경색의 밝기 순서로,
   // inactive는 어둑함과 같다고 추정했다.
@@ -43,7 +43,7 @@ const PALETTES: Record<ThemeBase, Palette> = {
     inactive: "rgb(88, 108, 137)",
     track: "rgb(25, 34, 46)",
     thumb: "rgb(0, 0, 0)",
-    swatchBorder: "rgba(255, 255, 255, 0.3)",
+    swatchRing: "rgba(255, 255, 255, 0.3)",
   },
 };
 
@@ -84,13 +84,16 @@ function text(content: string, style: string): HTMLDivElement {
  * 색은 theme.css의 변수에서 가져와 색을 한 곳에서만 관리한다. (배경은 background-color가 아니라
  * background-image로 칠한다. theme.css가 인라인 background-color를 치환하기 때문이다.)
  */
-function swatch(id: ThemeId, border: string): HTMLDivElement {
-  const el = view(
-    `width:14px;height:14px;border-radius:7px;flex-shrink:0;border:1px solid ${border};` +
-      `background-image:linear-gradient(135deg, var(--bt-${id}-light-0) 50%, var(--bt-${id}-dark-0) 50%);`,
+function swatch(id: ThemeId, ring: string): HTMLDivElement {
+  // 테두리(border) 대신 안쪽 그림자로 테두리를 그린다. background-image는 기본이 padding-box 기준으로
+  // 반복되어서, 테두리 아래에 반대편 색이 반복되어 비치고 원의 가장자리가 깨져 보였다.
+  // 두 색의 경계는 49%/51%로 살짝 풀어 계단이 덜 보이게 한다.
+  return view(
+    "width:16px;height:16px;border-radius:8px;flex-shrink:0;" +
+      `box-shadow:inset 0 0 0 1px ${ring};` +
+      `background-image:linear-gradient(135deg, var(--bt-${id}-light-0) 49%, var(--bt-${id}-dark-0) 51%);`,
     { "aria-hidden": "true" },
   );
-  return el;
 }
 
 export interface ThemeSection {
@@ -147,7 +150,7 @@ export function createThemeSection(
       "flex-direction:row;align-items:center;justify-content:center;gap:8px;flex:1 1 0%;background-color:transparent;padding:4px 8px;min-height:40px;cursor:pointer;",
       { role: "radio", "aria-label": name, tabindex: "0" },
     );
-    radio.append(swatch(theme.id, color.swatchBorder), label);
+    radio.append(swatch(theme.id, color.swatchRing), label);
     const wrapper = view("flex:1 1 0%;flex-direction:row;min-width:0;");
     wrapper.append(radio);
     group.append(wrapper);
