@@ -5,8 +5,8 @@
 ## 기능
 
 - 설정 > 모양(`/settings/appearance`)에서 밝은 테마일 때 "밝은 테마" (편안 / 밝음) 선택 버튼을 추가한다. 선택값은 `chrome.storage.sync`에 저장되고 `<html data-bt-light-theme="comfort|light">`로 반영된다.
-  - **편안** (기본): 밝은 테마의 흰색 배경을 살짝 톤다운한다. ([theme.css](src/content/theme.css))
-  - **밝음**: 블루스카이 밝은 테마 그대로.
+  - **편안**: 밝은 테마의 흰색 배경을 살짝 톤다운한다. ([theme.css](src/content/theme.css))
+  - **밝음** (기본): 블루스카이 밝은 테마 그대로. 선택이 없을 때(최초 설치 등)는 이 값이다.
 
 ## 개발
 

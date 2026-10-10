@@ -8,7 +8,8 @@ export const LIGHT_THEMES = [
 
 export type LightThemeId = (typeof LIGHT_THEMES)[number]["id"];
 
-export const DEFAULT_LIGHT_THEME: LightThemeId = "comfort";
+// 저장된 선택이 없을 때(최초 설치 등)의 값. theme.css는 "comfort"일 때만 적용되므로 기본은 블루스카이 그대로다.
+export const DEFAULT_LIGHT_THEME: LightThemeId = "light";
 
 const SECTION_TITLE = "밝은 테마";
 const THUMB_PADDING = 4;

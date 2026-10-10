@@ -7,12 +7,13 @@
  * 인라인 style은 스타일시트의 !important로 덮어쓸 수 있다. react-native-web의 원자 클래스(r-xxxx)는
  * 불안정하므로, 인라인 style 속성의 값으로 요소를 고른다.
  *
- * "편안"이 기본값이므로 data-bt-light-theme이 "light"가 아닐 때(아직 설정을 읽기 전 포함)
- * 적용한다. 저장된 값을 읽기 전에도 흰색 화면이 번쩍이지 않게 하기 위해서다.
+ * 선택이 없을 때(최초 설치 등)의 기본값은 "밝음"(블루스카이 그대로)이므로, data-bt-light-theme이
+ * 정확히 "comfort"일 때만 적용한다. 대신 "편안"을 고른 사용자는 저장된 값을 읽기 전인 새로고침
+ * 직후에 잠깐 흰색 화면이 보일 수 있다.
  *
  * --text(black)는 그대로 둔다. --rc-* 등 나머지 변수는 아직 건드리지 않는다.
  */
-html.theme--light:not([data-bt-light-theme="light"]) {
+html.theme--light[data-bt-light-theme="comfort"] {
   /*
    * 사용 중인 흰색 계열 배경을 각각 어떤 색으로 바꿀지 직접 적는다.
    * (원래 색은 인라인 style에서 수집한 값이며, 팔레트의 contrast_0/25/50으로 추정)
@@ -24,20 +25,20 @@ html.theme--light:not([data-bt-light-theme="light"]) {
 }
 
 /* 1) 스타일시트 규칙 */
-html.theme--light:not([data-bt-light-theme="light"]),
-html.theme--light:not([data-bt-light-theme="light"]) body,
-html.theme--light:not([data-bt-light-theme="light"]) #root {
+html.theme--light[data-bt-light-theme="comfort"],
+html.theme--light[data-bt-light-theme="comfort"] body,
+html.theme--light[data-bt-light-theme="comfort"] #root {
   background-color: var(--bt-bg-0);
   --background: var(--bt-bg-0);
 }
 
 /* 2) 인라인 style로 배경이 지정된 요소. hover 때 인라인 값이 바뀌어도 선택자가 그대로 걸린다. */
-html.theme--light:not([data-bt-light-theme="light"]) [style*="background-color: rgb(255, 255, 255)"] {
+html.theme--light[data-bt-light-theme="comfort"] [style*="background-color: rgb(255, 255, 255)"] {
   background-color: var(--bt-bg-0) !important;
 }
-html.theme--light:not([data-bt-light-theme="light"]) [style*="background-color: rgb(249, 250, 251)"] {
+html.theme--light[data-bt-light-theme="comfort"] [style*="background-color: rgb(249, 250, 251)"] {
   background-color: var(--bt-bg-25) !important;
 }
-html.theme--light:not([data-bt-light-theme="light"]) [style*="background-color: rgb(239, 242, 246)"] {
+html.theme--light[data-bt-light-theme="comfort"] [style*="background-color: rgb(239, 242, 246)"] {
   background-color: var(--bt-bg-50) !important;
 }
