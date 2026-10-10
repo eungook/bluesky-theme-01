@@ -38,13 +38,13 @@ html {
   --bt-soft-light-50: #dee1e5;
   --bt-soft-dark-0: #151d28;
 
-  /* 노랑: 아주 옅은 겨자색 / 아주 어두운 노란색 */
+  /* 노랑: 아주 옅은 겨자색 / 아주 어두운 노란색 (첫 추정값. 화면을 보며 조정한다) */
   --bt-yellow-light-0: #f6efcf;
   --bt-yellow-light-25: #efe8c5;
   --bt-yellow-light-50: #e7dfb8;
   --bt-yellow-dark-0: #1c1805;
 
-  /* 숲: 옅은 세이지 그린 / 아주 어두운 녹색 */
+  /* 숲: 옅은 세이지 그린 / 아주 어두운 녹색 (첫 추정값. 화면을 보며 조정한다) */
   --bt-forest-light-0: #e8efe6;
   --bt-forest-light-25: #e1e9df;
   --bt-forest-light-50: #d6e0d3;
