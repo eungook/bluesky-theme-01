@@ -5,9 +5,11 @@
 // 매번 로그인하지 않도록 세션을 .auth/bluesky.json에 저장해 다시 쓴다. 이 파일에는 토큰이 들어 있어서
 // .gitignore에 있고 권한을 본인만 읽을 수 있게 둔다. 세션이 만료되면 지우고 다시 로그인한다.
 import { mkdir, rm, writeFile } from "node:fs/promises";
-import { type Browser, type BrowserContext, type Page } from "playwright";
+import { type Browser, type BrowserContext, chromium, type Page } from "playwright";
 
 const STATE_PATH = ".auth/bluesky.json";
+// 확장을 올리는 테스트는 persistent context를 써야 해서, 세션을 파일이 아니라 프로필 폴더에 둔다.
+const PROFILE_DIR = ".auth/chromium-profile";
 
 // 로그인 화면의 문구를 쓰므로 언어를 영어로 고정한다.
 const CONTEXT_OPTIONS = { colorScheme: "light", locale: "en-US", viewport: { width: 1280, height: 900 } } as const;
@@ -117,6 +119,34 @@ export async function openLoggedIn(browser: Browser, url: string): Promise<{ con
   } catch (error) {
     await context.close();
     throw new Error(redact(error instanceof Error ? error.message : String(error), secrets));
+  }
+  return { context, page };
+}
+
+/**
+ * 확장(extensionPath의 빌드)을 올린 Chromium으로 로그인된 상태의 url을 연다. 정식 Chrome은 확장을 옆에서 불러오는
+ * 옵션을 막았기 때문에 Playwright의 Chromium을 쓴다. 세션은 프로필 폴더(.auth/chromium-profile)에 남아 다음에 다시 쓴다.
+ * 호출한 쪽이 context를 닫는다.
+ */
+export async function openLoggedInWithExtension(
+  extensionPath: string,
+  url: string,
+): Promise<{ context: BrowserContext; page: Page }> {
+  const { username, password } = readCredentials();
+  await mkdir(PROFILE_DIR, { recursive: true });
+  const context = await chromium.launchPersistentContext(PROFILE_DIR, {
+    ...CONTEXT_OPTIONS,
+    channel: "chromium",
+    headless: true,
+    args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
+  });
+  const page = context.pages()[0] ?? (await context.newPage());
+  try {
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30_000 });
+    if (await looksSignedOut(page)) await signIn(page, username, password);
+  } catch (error) {
+    await context.close();
+    throw new Error(redact(error instanceof Error ? error.message : String(error), [username, password]));
   }
   return { context, page };
 }
