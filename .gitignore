@@ -22,6 +22,9 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .env.production.local
 .env.local
 
+# 라이브 테스트가 저장하는 로그인 세션(토큰이 들어 있다). 절대 커밋하지 않는다.
+.auth
+
 # caches
 .eslintcache
 .cache

@@ -25,9 +25,9 @@
 
 ### 추가 자동 테스트 — 사용자 결정
 
-- **보류한 날짜:** 2026-10-14. 사용자가 테스트를 [hover-background.test.ts](../tests/live/hover-background.test.ts)의 hover 확인으로 좁혔고, 같은 날 다크 모드(어둑함)도 그 테스트에 더했다.
+- **보류한 날짜:** 2026-10-14. 사용자가 테스트를 [hover 색 확인](../tests/live/hover-background.test.ts)(라이트와 어둑함)과 [설정 주소 확인](../tests/live/settings-path.test.ts)(로그인 필요)으로 좁혔다.
 - **다시 꺼낼 조건:** 사용자가 테스트를 더 늘리자고 할 때.
-- **후보:** 확장을 올려 실제로 색이 바뀌는지(Playwright의 Chromium에 `--load-extension`, 정식 Chrome은 불가), 왼쪽 메뉴의 hover, 치환표에 없는 새 인라인 색 감시, 로그인 상태의 설정 화면과 `theme--dark`, 가짜 chrome/DOM으로 하는 순수 로직 테스트.
+- **후보:** 확장을 올려 실제로 색이 바뀌는지(Playwright의 Chromium에 `--load-extension`, 정식 Chrome은 불가)와 선택 화면이 뜨는지, 왼쪽 메뉴의 hover, 치환표에 없는 새 인라인 색 감시, 설정 화면의 안쪽 구조(첫 radiogroup의 선택지 3개, 어두운 테마 선택의 위치)와 같은 주소에 "페이지 없음" 화면이 뜨는 경우, `theme--dark`, 가짜 chrome/DOM으로 하는 순수 로직 테스트.
 
 ### 어둑함의 구분선 색이 치환표와 다르다 — 확인 필요
 
