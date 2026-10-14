@@ -4,7 +4,8 @@
   "private": true,
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/chrome": "^0.3.4"
+    "@types/chrome": "^0.3.4",
+    "playwright": "^1.64.0"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -14,6 +15,7 @@
     "dev": "bun run build.ts --watch",
     "icons": "bun run scripts/build-icons.ts",
     "package": "bun run scripts/package.ts",
+    "test:live": "bun test tests/live",
     "typecheck": "tsc"
   }
 }

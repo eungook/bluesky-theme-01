@@ -25,6 +25,7 @@ bun run dev         # 변경 시 자동 재빌드
 bun run typecheck
 bun run icons       # src/icons/icon.svg에서 아이콘 PNG를 다시 만든다 (macOS + Chrome 필요)
 bun run package     # 스토어에 올릴 out/bluesky-theme-<version>.zip을 만든다
+bun run test:live   # 실제 bsky.app을 열어 블루스카이 쪽 가정이 아직 맞는지 확인한다 (docs/testing.md)
 ```
 
 `dist/`를 `chrome://extensions`의 "압축해제된 확장 프로그램을 로드합니다"로 불러온다.
